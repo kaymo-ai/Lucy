@@ -206,6 +206,13 @@
     color:var(--muted);font-size:15px;
   }
   footer a{font-weight:700}
+  /* ---- the fact sheet example ---- */
+  pre.sheet{
+    font-family:var(--mono);font-size:12.5px;line-height:1.5;color:var(--text);
+    background:var(--raised);border:1px solid var(--hairline);border-radius:var(--radius-sm);
+    padding:14px 16px;margin:6px 0 6px;max-width:38em;overflow-x:auto;white-space:pre-wrap;
+  }
+  section h3{max-width:38em}
 </style>
 </head>
 <body>
@@ -215,64 +222,107 @@
   <div class="mark"><span class="dot"></span><a href="https://marcusfoster.com">marcusfoster.com</a></div>
   <p class="eyebrow">Case study · iOS · on-device LLM · 2026</p>
   <h1>Lucy<br><span class="dim">Offline AI</span></h1>
-  <p class="lede">An iPhone app that runs a <strong>multi-billion-parameter language model with no
-  network at all</strong>, and answers questions out of ten years of one Burning Man camp's
-  collective memory. Built for Black Rock City, where there is no signal, no cloud,
-  and no second chance to look something up.</p>
+  <p class="lede">An iPhone app that answers questions about one Burning Man camp out of
+  <strong>ten years of its own group chat</strong>, with a three-billion-parameter language
+  model running on the phone and <strong>no network at all</strong>. This page explains
+  the problem, the architecture that came out of it, and the places it broke on the
+  way there.</p>
 </header>
 
 <section>
-  <h2>The constraint is the design</h2>
-  <p>Preservation Society is a Burning Man theme camp: a few hundred people, a decade of
-  accumulated know-how, and one week a year when all of it matters at once. Who has the
-  generator manual. What socket the lag bolts take. Where the water barrels live. The
-  answers exist, scattered across 27,000 WhatsApp messages and a decade of documents,
-  and they are needed in a place with no connectivity whatsoever.</p>
-  <p>So everything runs on the phone. The model, the search index, the knowledge base,
-  the city's own event listings. The only network feature in the app is a Sync button,
-  used when someone passes through cell coverage, and the app is complete without it.</p>
+  <h2>The problem</h2>
+  <p>Preservation Society is a theme camp at Burning Man: a few hundred people, a decade
+  of accumulated know-how, and one week a year when all of it matters at once. Which
+  socket the lag bolts take. Where the water barrels went last year. Who has the key to
+  the generator. Every one of those answers exists. They are just buried in 27,000
+  WhatsApp messages and a folder of spreadsheets, and the person who knows is asleep,
+  or on the other side of the city, or not coming this year.</p>
+  <p>The obvious answer is a chatbot over the chat history. Three things make that hard
+  in this particular place.</p>
+  <ul>
+    <li><strong>There is no network.</strong> Black Rock City has no usable signal. Whatever
+    the app can answer, it has to be carrying already: the knowledge, the search index,
+    and the language model itself, on a phone that is also somebody's camera and torch.</li>
+    <li><strong>The knowledge is conversation, not facts.</strong> Group chat is people
+    talking. A fact like "the padlock hammer lives inside the van" is spread across
+    three messages, two years apart, one of which is a joke. Something has to read all
+    of it and decide what the camp actually knows.</li>
+    <li><strong>A confident wrong answer is worse than no answer.</strong> Nobody can
+    check. If the app says the ladders are in the wrong truck, somebody walks to the
+    wrong truck at 2am in a dust storm. A language model left to itself will say that
+    kind of thing fluently and often.</li>
+  </ul>
   <div class="stats">
     <div class="stat"><b>0</b><span>bytes of network per answer</span></div>
-    <div class="stat"><b>3.11&nbsp;GB</b><span>model, quantised, on device</span></div>
-    <div class="stat"><b>27,163</b><span>WhatsApp messages ingested</span></div>
-    <div class="stat"><b>2%</b><span>invention rate, measured</span></div>
+    <div class="stat"><b>3.11&nbsp;GB</b><span>language model, on the phone</span></div>
+    <div class="stat"><b>27,163</b><span>WhatsApp messages read</span></div>
+    <div class="stat"><b>2%</b><span>answers inventing a fact, measured</span></div>
   </div>
 </section>
 
 <section>
-  <h2>How it fits together</h2>
-  <p>Two halves. A build-time pipeline on my Mac turns raw camp history into a small,
-  clean SQLite database, and a run-time loop on the phone turns that database plus a
-  local LLM into answers. The expensive intelligence runs once, at build time; the
-  phone only ever does retrieval and phrasing.</p>
+  <h2>Why the model is not allowed to know things</h2>
+  <p>A language model is, at heart, a very good guesser of the next word. It has read
+  most of the internet. It has read none of this camp's chat. Ask it where the camp
+  keeps its shade structure and it will produce a perfectly plausible sentence, because
+  producing plausible sentences is the one thing it does. It has no way to tell the
+  difference between what it knows and what merely sounds right.</p>
+  <p>So Lucy is built on one rule, and everything else on this page is in service of
+  it:</p>
+  <div class="measure">
+    <p><strong>Retrieval supplies the facts. The model only phrases them.</strong> Anything
+    particular to the camp, a name, a date, a number, a place, who did what, has to come
+    from a row in a database. The model's job is to turn those rows into a sentence a
+    person would say. A claim the model made up is a bug, not a style problem.</p>
+  </div>
+  <p>This is the same idea usually called retrieval-augmented generation, or RAG: look
+  the facts up first, then hand them to the model with the question. What is unusual
+  here is how far it is pushed, and that it is measured. On forty of the camp's real
+  questions, the model with no grounding rules invented a camp-specific claim in
+  <strong>82% of answers</strong>. With the rules, <strong>2%</strong>. That number, not
+  anyone's taste, decides what ships.</p>
+  <p>The rule has one deliberate exception. What the model knows about the world in
+  general stays its own. She is allowed to know the desert is hot and that you should
+  drink before you are thirsty. She is not allowed to guess which of the camp's two
+  vans the water is in. The line is ownership: general knowledge is hers; the camp's
+  particulars need a row.</p>
+</section>
+
+<section>
+  <h2>The shape of it</h2>
+  <p>Two halves, with a database between them. Think of a librarian who does all the
+  reading and cataloguing before the trip, and then on the trip only ever looks things
+  up and reads them aloud. The expensive thinking happens once, on a Mac with an
+  internet connection, weeks before the event. The phone never has to understand the
+  chat history. It only has to search a catalogue and phrase what it finds.</p>
 
   <div class="flow">
     <div class="lane">
       <p class="eyebrow">Build time · <em>Mac + cloud, before the burn</em></p>
       <div class="nodes">
-        <div class="node"><b>Raw history</b><span>27k WhatsApp messages · 144 documents (cut from 627)</span></div>
+        <div class="node"><b>Raw history</b><span>27k WhatsApp messages · 144 documents, cut from 627 · a roster of 291 people</span></div>
         <div class="arrow"></div>
-        <div class="node"><b>Enrichment</b><span>Gemini extracts entities, dated facts, evidence with citations</span></div>
+        <div class="node"><b>Enrichment</b><span>a large model turns conversation into dated claims, each citing the messages it came from</span></div>
         <div class="arrow"></div>
-        <div class="node"><b>Embeddings</b><span>vector per claim, verified complete before packaging</span></div>
+        <div class="node"><b>Embeddings</b><span>a 768-number vector for every claim, so meaning can be searched as well as words</span></div>
         <div class="arrow"></div>
-        <div class="node hot"><b>Gates</b><span>redaction check · baseline diff · evidence integrity</span></div>
+        <div class="node hot"><b>Gates</b><span>every claim has evidence · every claim has a vector · nothing personal ships · no table shrank</span></div>
       </div>
-      <p class="loop">↻ content-keyed cache: a rebuild only pays for messages that changed, so iteration went from hours to minutes</p>
+      <p class="loop">↻ a content-keyed cache means a rebuild only pays for messages that changed, so an iteration is minutes rather than hours</p>
     </div>
     <div class="between">↓ <span>knowledge.db · 17.6 MB of SQLite, shipped inside the app</span></div>
     <div class="lane">
       <p class="eyebrow">Run time · <em>iPhone, offline</em></p>
       <div class="nodes">
-        <div class="node"><b>Question</b><span>typed or spoken (on-device speech)</span></div>
+        <div class="node"><b>Question</b><span>typed, or spoken to an on-device recogniser</span></div>
         <div class="arrow"></div>
-        <div class="node"><b>Retrieval</b><span>term + vector search across facts, people, docs, lore</span></div>
+        <div class="node"><b>Retrieval</b><span>word search plus meaning search across facts, people, documents, stories, and past conversation</span></div>
         <div class="arrow"></div>
-        <div class="node"><b>Fact sheet</b><span>only rows that matched, ranked by relevance</span></div>
+        <div class="node"><b>Fact sheet</b><span>the rows that matched, ranked, with their dates and sources</span></div>
         <div class="arrow"></div>
-        <div class="node hot"><b>Gemma 4</b><span>llama.cpp, phrases the facts and nothing else</span></div>
+        <div class="node hot"><b>Gemma 4</b><span>llama.cpp on the phone, phrases the sheet and nothing else</span></div>
       </div>
-      <p class="loop">↻ every turn is journalled — QUESTION / FACTS GIVEN / ANSWERED — and the journal replays as an eval set for every prompt change</p>
+      <p class="loop">↻ every turn is journalled, question / facts given / answer, and the journal is the test set for every change</p>
     </div>
   </div>
 </section>
@@ -280,235 +330,416 @@
 <section>
   <div class="split">
     <div>
-      <h2>Grounded, and measured to be</h2>
-      <p>The core invariant: <strong>retrieval supplies the facts; the model only phrases
-      them.</strong> A camp particular — a name, a date, a number, who owns what — must trace
-      to a database row, because a confidently wrong answer sends somebody to the wrong
-      warehouse in a whiteout.</p>
-      <div class="measure">
-        <p>With no grounding rules the model invents a camp-specific claim in
-        <span class="mono">82%</span> of answers. With them:
-        <span class="mono">2%</span>. Measured by replaying the owner's real questions
-        from the journal and scoring every answer against the facts it was given.</p>
-      </div>
-      <p>That number is the design authority. Every prompt change, every model swap, every
-      retrieval tweak gets replayed against real questions before it ships. When I
-      fine-tuned the model on the camp's own voice, the eval said the tuned model had
-      learned the register but confabulated more, so it lost, and the measurement is why
-      taste didn't get a vote.</p>
-      <p>General knowledge stays the model's own. She's allowed to know the desert is hot;
-      she isn't allowed to guess where the camp keeps its shade structure.</p>
+      <h2>Build time: turning chat into knowledge</h2>
+      <p>The pipeline is twelve stages of Python. Most of the interesting decisions are
+      in three of them.</p>
+
+      <h3>1. Reading the chat</h3>
+      <p>A WhatsApp export is a text file of timestamped lines, full of system notices,
+      attachment markers and invisible direction characters. The parser turns ten
+      group chats into 27,163 messages, each with a sender, a time and a body. The
+      camp's documents, spreadsheets, manuals, menus, are converted to Markdown and
+      CSV and read alongside.</p>
+      <p>Most of the documents were noise. 627 became 144, a 77% cut, and the
+      question was how to cut without losing something that mattered. Three
+      reasonable rules were tried and each deleted something load-bearing: dropping
+      the finance folder removed the only document containing the word
+      "tourniquet", because the medical kit inventory was filed under finance. The
+      rule that survived is a test rather than a rule: a document may be dropped
+      only if every distinctive word in it appears somewhere in the kept set. If a
+      word would be orphaned, the document stays.</p>
+
+      <h3>2. Enrichment: deciding what the camp knows</h3>
+      <p>This is the step that makes the whole thing work, and it is judgement, not
+      parsing. A large model, Gemini running in Google's cloud, reads the messages
+      and decides that a phrase is a thing the camp has a name for, that a rambling
+      thread contains a decision, that a running joke is actually a tradition. It
+      writes what it finds as <strong>claims</strong>: short dated sentences in the
+      camp's own voice.</p>
+      <p>Three messages about a wrench and a socket size become one claim, with a
+      year, filed under the shade structure. The claim is stored next to an
+      <strong>evidence</strong> row pointing at the exact messages it came from.
+      There are 8,020 of those evidence rows behind 1,745 camp facts, and a database
+      trigger refuses any claim that arrives without one. When she answers, she can
+      say which message she is leaning on, and the app can show it.</p>
+      <p>The choice of model here was measured, not assumed. On a byte-identical
+      corpus, Gemini's strongest model found 149 distinct entities where its fast
+      model found 64. The hundred it missed were not inventory. They were the camp's
+      culture: the named traditions, the in-jokes, the things you cannot photograph.
+      Capability beats throughput when the job is judgement.</p>
+      <p>Enrichment costs money and takes hours, which used to mean every experiment
+      took a whole run. Every request is now cached by a hash of the model, the prompt
+      and the message content, never by row number, because a rebuild renumbers every
+      row and a cache keyed by id would return the right answer for the wrong message
+      and look healthy doing it. A rebuild pays only for what changed. Six per cent of
+      the messages were new; the other ninety-four came from the cache.</p>
+
+      <h3>3. Embeddings: searching by meaning</h3>
+      <p>Word search has a blind spot: "med kit" does not match "first aid", and
+      "where do we dump the grey water" shares no words with "the evap pond is behind
+      the kitchen". An <strong>embedding</strong> fixes part of that. A small model
+      turns a sentence into a list of 768 numbers, a point in a space where sentences
+      that mean similar things end up near each other. Every claim gets its vector at
+      build time. On the phone, the question gets a vector too, and the nearest
+      claims come back even when they share no words.</p>
+      <p>The encoder is EmbeddingGemma, 300 million parameters, the same model on the
+      Mac and on the phone. That matters: vectors from two different models are not
+      comparable, and a mismatch does not fail, it just returns nonsense similarities.
+      The packaging gate checks that every claim has a vector from the model the
+      phone will use.</p>
+    </div>
+    <figure class="shot">
+      <img src="tech/buildguide.jpg" alt="The build guide with the camp plan figure" width="900" height="1957">
+      <figcaption>One document that did not get cut: the camp's build manual, converted
+      from Word to Markdown with all 15 figures intact, because no paraphrase of a
+      site plan is any use to somebody placing a truck.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="split">
+    <div>
+      <h2>Run time: answering a question on the phone</h2>
+      <p>Take a real shape of question: <em>"how do we get water delivered?"</em>
+      Here is what happens between the tap and the answer, all of it on the phone.</p>
+
+      <h3>1. Words</h3>
+      <p>The question is lowercased and split, and words that carry no signal are
+      dropped: <span class="mono">how do we get</span> goes, <span class="mono">water
+      delivered</span> stays. The stop list is explicit, not a length rule. An earlier
+      version dropped every word of two letters or fewer, which silently deleted a
+      camper called Oz from every question about him. Six of 71 real questions lost
+      every term that way.</p>
+
+      <h3>2. Word search, five tables at once</h3>
+      <p>The terms are matched against the camp's facts, its named things (vehicles,
+      traditions, places), its people, its documents, and its stories. Each hit is
+      scored. An exact topic match is worth eight points; a word in the text less.
+      Then age multiplies the score: 0.88 per year, floored at 0.35, so a 2019 fact
+      still competes but a 2025 one wins a tie. Undated facts get 0.6, roughly a
+      2021 claim, because the honest prior for an unknown year is a typical year. An
+      earlier version scored undated facts at 1.0, which handed every claim with
+      missing metadata a threefold advantage over anything dated. A test caught it:
+      a question about water delivery started preferring an undated row about
+      vouchers over the only row in the table containing the word "deliver".</p>
+
+      <h3>3. Meaning search, capped hard</h3>
+      <p>The question is encoded into its 768 numbers by the same EmbeddingGemma
+      model, running on the CPU, and compared against every stored vector. Only
+      claims scoring above 0.45 count, and at most two are added. Both numbers were
+      learned the hard way, in the section below.</p>
+
+      <h3>4. The fact sheet</h3>
+      <p>Everything that matched is rendered into plain text with its date and where
+      it came from. This is the entire world the model is allowed to see:</p>
+<pre class="sheet">FACTS YOU MAY USE:
+- Water comes by truck on Tuesday and Friday;
+  book it on the shared sheet (2024) [from our manual]
+- Grey water goes to the evap pond behind
+  the kitchen (2023)
+About Doris, our vehicle:
+- carries the water barrels to playa [said 2022-08-19]
+
+QUESTION: how do we get water delivered?</pre>
+      <p class="muted mono" style="font-size:12px">Illustrative rows, not the camp's.</p>
+      <p>If nothing matched, the sheet says so, in words, and the rules tell her to say
+      she does not know rather than fill the gap. If the question named a person, a
+      short portrait of them leads the sheet: what they are like, how they show up in
+      chat, then what they do. That order was reversed once and she answered "who is
+      X" by reciting a job description.</p>
+
+      <h3>5. The prompt, and two dials</h3>
+      <p>The sheet goes to the model wrapped in a prompt of five numbered rules, the
+      first of which is the one above. The rest: answer the question that was asked and
+      name the gap if the detail is missing; credit the camp, not yourself, for
+      building and hauling things; when facts disagree, give both with dates; if
+      asked to mock a campmate, decline warmly. Two paragraphs are user settings:
+      register, from dry to loose, and length, from terse to full. They move her tone
+      without touching the grounding.</p>
+      <p>One rule about the prompt itself: it contains no example sentences. An
+      earlier version illustrated its rules with sample answers, and she pasted them
+      back as answers. It got worse after a parsing bug was fixed, because a model
+      that reads the prompt properly copies its examples faithfully.</p>
+
+      <h3>6. The model</h3>
+      <p>Gemma 4 E2B, quantised to four bits (3.11 GB), through llama.cpp compiled into
+      the app. Phones with less memory get Gemma 3 1B (806 MB) instead, chosen by RAM
+      at first launch, with a manual override because an 8 GB iPhone 16 Pro reports
+      7.46 GiB usable and fell on the wrong side of the threshold. A memory spike on
+      a real device settled that a 3 GB model would fit at all: with Apple's
+      increased-memory entitlement the app sees 6.1 GB, and memory-mapping the weights
+      means loading costs 720 MB of resident memory rather than 3.6 GB.</p>
+      <p>The two Gemma generations use different chat markers, the tokens that say
+      "the user's turn ends here". The app decides which to use by tokenising a probe
+      string and counting tokens, never by filename. For the first week the markers
+      were hardcoded to the older model's, so every prompt reached the larger model
+      wrapped in text it read as ordinary characters. Nothing looked broken. It
+      answered fluently. Every prompt tuned in that week was tuned against malformed
+      input.</p>
+
+      <h3>7. Memory that survives a reboot</h3>
+      <p>There is no rolling transcript in the prompt. Every exchange is written to a
+      second SQLite database, separate from the camp's knowledge so it survives app
+      updates, and comes back the same way a fact does: the last three turns always,
+      plus any older turn that matches the question. History is labelled as
+      conversation, never as fact, because she can be told something wrong and must
+      not repeat it back as the camp's record. A follow-up like "where is it stored"
+      works because the previous question's terms blend into this one, but only when
+      the new question has fewer than two terms of its own. Unconditional blending is
+      how assistants end up answering the question you asked a minute ago.</p>
+      <p>A bigger context window would not have done this. A week of conversation does
+      not fit in any window, and a rolling summary throws away the detail long before
+      anyone asks for it. Memory is a retrieval problem, and the app already had a
+      retrieval layer.</p>
     </div>
     <figure class="shot">
       <img src="tech/convo.jpg" alt="A real exchange with Lucy, names blurred" width="900" height="1957">
       <figcaption>A real exchange, on-device. The phone number came from a retrieval
-      row; the lore answer is composed from the camp's own record of a running
-      joke. Names and numbers blurred for this page.</figcaption>
+      row; the second answer is composed from the camp's own record of a running joke.
+      Names and numbers blurred for this page.</figcaption>
     </figure>
   </div>
 </section>
 
 <section>
-  <h2>What she actually does</h2>
-  <p>One app, four tabs, everything below working with airplane mode on.</p>
-  <div class="features">
-    <div class="feature"><b>Hold to talk</b><span>On-device speech recognition,
-      forced — the recogniser is never allowed to try the network. She answers
-      in text you can read in your tent without waking anyone.</span></div>
-    <div class="feature"><b>Grounded chat</b><span>Answers phrased by the local
-      LLM from retrieved rows: who owns what, where things live, what the camp
-      decided and when.</span></div>
-    <div class="feature"><b>Memory across reboots</b><span>Every exchange lands
-      in SQLite and becomes retrievable context. An "Earlier" control pages the
-      old thread back in.</span></div>
-    <div class="feature"><b>The people directory</b><span>309 campers, searchable
-      by name or by what they're known for — "who fixes bikes" is a people
-      question, not a facts question.</span></div>
-    <div class="feature"><b>Capture for the camp</b><span>Photos and voice notes,
-      transcribed on the phone, queued offline, synced when someone passes
-      through coverage.</span></div>
-    <div class="feature"><b>The paperwork</b><span>The full camp manual, the
-      illustrated build guide, and the shift schedule — searchable, foldable,
-      bundled in the app.</span></div>
-    <div class="feature"><b>The whole city</b><span>Black Rock City's 4,224
-      published events by day and hour with category filters, plus every camp
-      and art piece.</span></div>
-    <div class="feature"><b>Her voice, dialled</b><span>Register (dry to loose)
-      and answer length are user settings — the two dials that move tone
-      without touching the grounding rules.</span></div>
-    <div class="feature"><b>Her brain, chosen</b><span>Auto-picks Full or Light
-      by RAM, with a manual override for phones the heuristic gets
-      wrong.</span></div>
-    <div class="feature"><b>Provenance everywhere</b><span>Every screen can say
-      which build, which knowledge snapshot, which model — so a bug report
-      names its exact commit.</span></div>
+  <h2>Measuring instead of reading three answers on a phone</h2>
+  <p>For the first weeks every change to the prompt was judged by installing the app
+  and reading a handful of answers. That is how the marker bug survived a week. The
+  fix was a bench.</p>
+  <p>The phone journals every turn: the question, the exact fact sheet, the answer, and
+  which model was loaded. That journal replays. One tool runs the camp's real questions
+  and recorded fact sheets through the real model under different prompts. Another
+  scores each answer with no model in the loop: does it contain a name, number or
+  place that is not in the fact sheet? How much of it is lifted verbatim? How long is
+  it? A third puts both models side by side on a local web page for a person to
+  read.</p>
+  <div class="measure">
+    <p>Forty real questions, same fact sheets, two prompts. With the full rules: 2% of
+    answers invent a camp particular, 20% are more than half copied from the sheet,
+    median length 15 words. With no rules: 82% invent, 2% copy, median 56 words.</p>
   </div>
-  <div class="twoshots">
-    <figure class="shot">
-      <img src="tech/memory.jpg" alt="The Memory tab with the camera viewfinder" width="900" height="1957">
-      <figcaption>Memory: point, shoot or hold to talk, and the note is queued
-      for the camp.</figcaption>
-    </figure>
-    <figure class="shot">
-      <img src="tech/people.jpg" alt="The people directory, names blurred" width="900" height="1774">
-      <figcaption>The directory, searchable by what people are known for.
-      Names and initials are blurred here; on the phone they are the point.</figcaption>
-    </figure>
-  </div>
+  <p>That table is the central trade-off of the project. The grounding rule buys truth
+  and pays for it in voice. The flat, list-like answers people complain about are the
+  price of the 2%. You cannot get the voice back by deleting rules, because deleting
+  rules deletes the grounding. The bench is also why a fine-tune of the model on the
+  camp's own voice did not ship: it learned the register and confabulated more, and
+  the number said no.</p>
+  <p>The same bench settled a question that had been open for weeks. Answers had seemed
+  to improve after the marker fix, but the improvement had come from switching to the
+  smaller model at the same time. The small model reads freer, 51 words against 15,
+  and invents a camp particular in 28% of answers. Part of what had felt like
+  improvement was the grounding letting go.</p>
+  <p>There is now a regression gate on top: thirty-two questions with expected
+  behaviour written down, run through a Python mirror of the phone's retrieval code
+  before any change to it ships. The mirror is kept honest by tests that read the
+  Swift source and refuse to pass if the stop list or the prompt has drifted.</p>
 </section>
 
 <section>
-  <h2>Inference on a phone that's also a phone</h2>
-  <p>The model is <strong>Gemma 4 E2B</strong>, quantised to Q4_K_M (3.11 GB), running on
-  <strong>llama.cpp</strong> compiled into the app as an xcframework. Smaller phones get
-  <strong>Gemma 3 1B</strong> (806 MB) instead, chosen by RAM at first launch, with a
-  manual override after an 8 GB iPhone 16 Pro measured 7.46 GiB usable and got
-  misclassified by my threshold. Auto is right for most phones; the override exists for
-  when it's wrong in either direction.</p>
-  <p>Two details that earn their keep:</p>
-  <ul>
-    <li><strong>Chat-template detection by tokenisation, not filename.</strong> The two Gemma
-    generations use different turn markers. The markers were once hardcoded, so every
-    prompt reached the bigger model wrapped in text it read as ordinary characters, and
-    nothing looked broken. Now the app tokenises a probe string and counts tokens to
-    decide which dialect the loaded weights actually speak.</li>
-    <li><strong>Memory that survives reboots without a context window.</strong> There is no
-    rolling transcript in the prompt. Every exchange lands in SQLite, becomes retrievable
-    like any other fact, and the KV cache is treated as scratch. Follow-ups work because
-    the previous turn's terms blend into the next search, not because the model is
-    holding the conversation in RAM.</li>
-  </ul>
-</section>
-
-<section>
-  <div class="split">
-    <div>
-      <h2>The knowledge pipeline</h2>
-      <p>Group chat is not a knowledge base. The pipeline's job is judgement: deciding that
-      a running joke is actually a named tradition, that a rambling thread contains a
-      decision, that a phrase is a thing the camp has a word for.</p>
-      <p>Choices that mattered, each settled by measurement rather than taste:</p>
-      <ul>
-        <li><strong>Capability beats throughput at build time.</strong> On a byte-identical
-        corpus, the stronger extraction model found 149 distinct entities where the fast
-        one found 64 — and the hundred it dropped were precisely the camp's culture, not
-        its inventory.</li>
-        <li><strong>Documents were cut 77% using an orphan-term test:</strong> a document may
-        be dropped only if every distinctive word in it survives somewhere in the kept
-        set. Three plausible folder-based rules each failed that test by deleting
-        something load-bearing, like the only document containing "tourniquet".</li>
-        <li><strong>The cache is keyed by content, never by row id.</strong> Rebuilds recreate
-        the database and renumber everything; a row-keyed cache would serve answers
-        belonging to whatever message inherited the id, and look healthy doing it.</li>
-        <li><strong>A build must beat its baseline.</strong> The packaging gate refuses any
-        build where a table shrank more than 25% against the last human-accepted one.
-        Regressions that pass every unit test still have to explain a missing thousand
-        rows.</li>
-      </ul>
-    </div>
-    <figure class="shot">
-      <img src="tech/buildguide.jpg" alt="The build guide with the camp plan figure" width="900" height="1957">
-      <figcaption>One product of the pipeline: the camp's 29 MB build manual,
-      converted to markdown with its 15 figures intact — because no paraphrase
-      of a camp plan is any use to somebody placing a truck.</figcaption>
-    </figure>
-  </div>
+  <h2>Where it went wrong</h2>
+  <p>Every one of these passed its tests. The pattern is that the likely failure in
+  this system is silence, not a crash, so the work is making silence loud.</p>
+  <dl>
+    <dt>The meaning search shipped, installed, and did nothing</dt>
+    <dd>On the GPU, the encoder returned a vector of the right length full of NaN.
+    NaN clears no threshold, so semantic recall added zero rows to every answer, with
+    no error and no log. Every unit test had passed, because none of them ran the
+    encoder: that needs a 333 MB model that is not in the test bundle. It runs on the
+    CPU now, a live test loads the real model when it is present, and a non-finite
+    vector is refused outright. <strong>A test that skips is not a test that
+    passes.</strong></dd>
+    <dt>Then it worked, and made answers worse</dt>
+    <dd>Once running, it fired on 13 of 15 real questions and added up to five rows
+    each, about half of them noise. A question about one camper's tastes gained his
+    battery specifications. The threshold had been set from one good question. Printed out,
+    the similarities split cleanly: above 0.45 answered the question, below merely
+    mentioned something in it. And 30% of the camp's facts are formulaic roster lines,
+    "X signed up in 2019", which cluster so tightly that any question with a name or a
+    year lands among them, scoring higher than genuine hits. The floor moved to 0.45
+    and the cap to two rows. <strong>A threshold calibrated on one example is a guess
+    wearing a number.</strong></dd>
+    <dt>A missing table returns nothing, not less</dt>
+    <dd>In SQLite, a query naming a table that does not exist fails to prepare, and
+    the app saw an empty result rather than an error. One new table name in the person
+    query killed every person card on older databases. Every query that names an
+    optional table checks for it first now.</dd>
+    <dt>An index can lie</dt>
+    <dd>A partial index stores the result of its predicate at write time. Change the
+    function behind it and queries keep using the old truth until the index is
+    rebuilt. Two migrations exist for exactly this.</dd>
+    <dt>Recency rewarded missing data</dt>
+    <dd>Scoring undated facts as if they were current gave 160 facts with no year a
+    threefold advantage. It surfaced as a failing test on a question nobody had
+    predicted, which is the only way it was going to surface.</dd>
+    <dt>The roster was missing from every build for seven months</dt>
+    <dd>The script that installs the roster into the database needs a flag. Without
+    it, it writes a file nothing reads and prints one line. Nobody read the line. A
+    gate now refuses any build in which a table shrank more than 25% against the last
+    build a human accepted, because the only reason this was caught at all was
+    somebody watching a number scroll past.</dd>
+  </dl>
 </section>
 
 <section>
   <div class="split">
     <div>
       <h2>Privacy by ownership, not by shape</h2>
-      <p>The corpus is a decade of a real community's chat. The redaction layer decides what
-      ships by asking <em>whose</em> a fact is, not what it looks like: a campmate's home
-      address must never leave my Mac, while the camp's own warehouse address absolutely
-      must ship, because that's the answer to a real question. A shape rule ("strip
-      everything address-like") gets exactly one of those right.</p>
-      <p>The gate checks the <strong>artifact</strong>, not the code: a second, deliberately
-      independent scanner reads the final SQLite file before every release and refuses
-      the build on a hit. It has disagreed with the builder once, catching ten personal
-      phone numbers a "safe" refactor exposed through a table the justifying measurement
-      hadn't scanned. That disagreement is the design working.</p>
-      <p>This public page follows the same rule: every screenshot here shows the app's own
-      chrome or the city's published data, no campmates.</p>
+      <p>The corpus is a decade of a real community's chat, and a slice of it ships on
+      forty phones. What may ship is decided by asking whose a fact is, not what it
+      looks like. A campmate's home address must never leave the Mac. The camp's own
+      warehouse address absolutely must ship, because "where is the warehouse" is a
+      real question. A shape rule, strip everything that looks like an address, gets
+      exactly one of those right. What separates them in practice is context: a
+      shipping-label block is personal; a sentence in a manual is the camp's.</p>
+      <p>The check runs on the artifact, not the code. A second, deliberately
+      independent scanner reads the final database file before every release and
+      refuses the build on a hit. It has disagreed with the builder once, catching ten
+      personal phone numbers that a "safe" refactor exposed through a table the
+      builder's own check had not scanned. That disagreement is the design working.</p>
+      <p>This page follows the same rule. Every screenshot shows the app's own chrome or
+      the city's published listings. The people directory is blurred. The camp and its
+      people stay in the dust.</p>
     </div>
     <figure class="shot">
+      <img src="tech/people.jpg" alt="The people directory, names blurred" width="900" height="1774">
+      <figcaption>The directory, searchable by what people are known for, because "who
+      fixes bikes" is a people question. Names and initials blurred here; on the phone
+      they are the point.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <h2>What she does</h2>
+  <p>One app, four tabs, everything below working with airplane mode on.</p>
+  <div class="features">
+    <div class="feature"><b>Hold to talk</b><span>On-device speech recognition, with
+      the network path disabled so it never tries. Answers arrive as text you can
+      read in a tent without waking anyone.</span></div>
+    <div class="feature"><b>Grounded chat</b><span>Answers phrased by the local model
+      from retrieved rows: who owns what, where things live, what the camp decided and
+      when.</span></div>
+    <div class="feature"><b>Memory across reboots</b><span>Every exchange lands in
+      SQLite and comes back as context. An "Earlier" control pages the old thread
+      back in.</span></div>
+    <div class="feature"><b>The people directory</b><span>309 campers, searchable by
+      name or by what they are known for.</span></div>
+    <div class="feature"><b>Capture for the camp</b><span>Photos and voice notes,
+      transcribed on the phone, queued offline, synced when someone passes through
+      coverage.</span></div>
+    <div class="feature"><b>The paperwork</b><span>The camp manual, the illustrated
+      build guide and the shift schedule, searchable and foldable, bundled in the
+      app.</span></div>
+    <div class="feature"><b>The whole city</b><span>Black Rock City's 4,224 published
+      events by day and hour, plus every camp and art piece.</span></div>
+    <div class="feature"><b>Her voice, dialled</b><span>Register and answer length are
+      settings, the two dials that move tone without touching the grounding.</span></div>
+    <div class="feature"><b>Her brain, chosen</b><span>Picks the full or light model by
+      RAM, with an override for phones the heuristic gets wrong.</span></div>
+    <div class="feature"><b>Provenance everywhere</b><span>Every screen can say which
+      build, which knowledge snapshot, which model, so a bug report names its
+      commit.</span></div>
+  </div>
+  <div class="twoshots">
+    <figure class="shot">
+      <img src="tech/memory.jpg" alt="The Memory tab with the camera viewfinder" width="900" height="1957">
+      <figcaption>Memory: point, shoot or hold to talk, and the note is queued for
+      the camp.</figcaption>
+    </figure>
+    <figure class="shot">
       <img src="tech/events.jpg" alt="The city's event listings" width="900" height="1957">
-      <figcaption>Black Rock City's 4,224 published events, folded by day and hour, filterable, searchable — converted from scraped listings into shippable JSON by a pipeline that also deduped the source's three distinct ways of repeating itself.</figcaption>
+      <figcaption>The city's 4,224 events, folded by day and hour, converted from the
+      published listings by a pipeline that also deduplicated the source's three
+      different ways of repeating itself.</figcaption>
     </figure>
   </div>
 </section>
 
 <section>
   <h2>The sync server, for when the desert ends</h2>
-  <p>Campers capture notes and photos all week; a small FastAPI + Postgres service
-  receives them whenever a phone finds coverage. Offline-first shapes every decision:</p>
+  <p>Campers capture notes and photos all week. A small FastAPI and Postgres service
+  receives them whenever a phone finds coverage, and hands everyone else's back. It is
+  built for connections that die halfway through, because that is the only kind there
+  is on the drive out.</p>
   <ul>
-    <li><strong>The note's id is minted on the phone.</strong> Retries on a half-dead
-    connection are idempotent because the server never assigns identity.</li>
-    <li><strong>Feed ordering is a server-side sequence assigned under an advisory
-    lock</strong>, so a client polling <span class="mono">?since=N</span> can never step
-    over a note whose transaction committed late.</li>
-    <li><strong>Blobs are content-addressed and never deleted</strong> — identical bytes
-    from two phones are one file, and deleting one member's note must not blind the
-    other's.</li>
+    <li><strong>The note's id is minted on the phone.</strong> If the upload dies after
+    the server saved it but before the phone heard back, the retry carries the same
+    id and the server recognises it. Nothing is duplicated, because the server never
+    assigns identity.</li>
+    <li><strong>Feed order is a server sequence assigned under a lock.</strong> A phone
+    catching up asks for everything since number N. Without the lock, a note whose
+    transaction committed late could get a number the phone had already passed, and
+    that phone would never see it.</li>
+    <li><strong>Photos are stored by their content, and never deleted.</strong> Two
+    phones photographing the same sign produce identical bytes and therefore one
+    file. Deleting one member's note must not blind the other's, so deletion marks
+    the note and leaves the file.</li>
   </ul>
-  <p>The round trip was verified end to end: a note with a photo and a voice memo, up
-  from the phone and back, byte-identical with EXIF intact.</p>
+  <p>The round trip was verified on a real phone: a note with a photo and a voice memo
+  went up, came back, and matched byte for byte with its EXIF intact.</p>
 </section>
 
 <section>
   <div class="split">
     <div>
-      <h2>Shipping discipline</h2>
-      <p>One developer, forty testers, no staging environment in the desert. The release
-      path compensates:</p>
+      <h2>Shipping</h2>
+      <p>One developer, forty testers, and no staging environment in the desert. The
+      release path compensates:</p>
       <ul>
-        <li><strong>199 unit tests</strong> plus a screenshot harness that renders any screen
-        of the app headlessly in the simulator — every UI claim in this page's images
-        came out of that harness, and UI bugs get caught by looking, not hoping.</li>
-        <li><strong>Resources are verified inside the built IPA</strong>, because the project
-        generator drops misplaced bundle entries silently. The tests open the artifact,
-        not the source tree.</li>
-        <li><strong>Debug and release are different apps</strong> with different bundle ids,
-        and the shipping split is proven at the binary level with
-        <span class="mono">strings</span> on the release build, not trusted to compiler
-        flags.</li>
-        <li><strong>Unattended TestFlight uploads</strong> via the App Store Connect API with
-        a hand-rolled ES256 JWT; the build number is the commit count, so every build on
-        a tester's phone names its exact commit.</li>
+        <li><strong>199 unit tests</strong>, plus a harness that renders any screen of
+        the app headlessly and saves the image. Every screenshot on this page came out
+        of it, and layout bugs get caught by looking rather than hoping.</li>
+        <li><strong>Resources are checked inside the built app</strong>, because the
+        project generator drops a misplaced bundle entry silently. The tests open the
+        artifact, not the source tree.</li>
+        <li><strong>Debug and release are different apps</strong> with different bundle
+        ids, so a tester's 3 GB model download is never invalidated by a debug build.
+        The split is proven by running <span class="mono">strings</span> on the release
+        binary, not trusted to compiler flags.</li>
+        <li><strong>Unattended TestFlight uploads</strong> through the App Store Connect
+        API. The build number is the commit count, so every build on a tester's phone
+        names its exact commit.</li>
       </ul>
     </div>
     <figure class="shot">
       <img src="tech/art.png" alt="Searching the art listing" width="900" height="1957">
-      <figcaption>Search reaches into descriptions, not just names: "dodecahedron" finds Nova by what it is. The descriptions were recovered from the source site's own API after the saved page turned out to fetch them lazily.</figcaption>
+      <figcaption>Search reaches into descriptions, not just names: "dodecahedron" finds
+      a piece by what it is. The descriptions had to be recovered from the source
+      site's own API after the saved page turned out to fetch them lazily.</figcaption>
     </figure>
   </div>
 </section>
 
 <section>
-  <h2>Field notes</h2>
-  <p class="muted">Things this project taught me, each the hard way, each now guarded by a test or a gate.</p>
-  <dl>
-    <dt>Silence is the default failure mode</dt>
-    <dd>A missing SQLite table makes the query return <strong>nothing</strong> rather than
-    less; a dropped bundle resource ships an empty screen; a wrong chat template produces
-    fluent answers to malformed prompts. The system is designed so its likely failures
-    are loud: floors, baselines, artifact checks, honest "not in this build" screens.</dd>
-    <dt>Evaluate against reality, not vibes</dt>
-    <dd>The journal of real questions is the eval set. It settled prompt changes, the
-    model tier threshold, a fine-tune that lost, and a retrieval rework — each time
-    against the same 2%-invention baseline, each time overruling somebody's taste,
-    sometimes mine.</dd>
-    <dt>Trim harder than feels right, with a safety net</dt>
-    <dd>Cutting 77% of documents cost almost nothing — but only the orphan-term test
-    could prove that, and every cut is a skip rule, not a deletion, so being wrong
-    costs one line.</dd>
-    <dt>An index can lie</dt>
-    <dd>A partial index stores the <strong>result</strong> of its predicate at write time.
-    Change the function behind it and queries silently use the old truth until you
-    rebuild the index. Migrations 005 and 006 exist because of this.</dd>
-  </dl>
+  <h2>What I would tell someone building one</h2>
+  <ul>
+    <li><strong>Decide what the model is allowed to know, and write it down as a rule
+    with a number attached.</strong> Here it is "camp particulars need a row" and the
+    number is 2%. Every argument about voice, length and prompt wording is settled
+    against that number.</li>
+    <li><strong>Do the thinking at build time.</strong> A phone cannot understand ten
+    years of chat, but it can search a catalogue that a much larger model prepared.
+    Enrichment is where the intelligence is; retrieval and phrasing are what runs
+    live.</li>
+    <li><strong>Every claim carries its evidence.</strong> Not as a nice-to-have but as
+    a constraint the database refuses to violate. It is the difference between an
+    answer and a rumour.</li>
+    <li><strong>Word search and meaning search fail differently, so use both and cap
+    the second.</strong> Words are precise and miss synonyms; vectors reach synonyms
+    and drift toward whatever is formulaic. Two rows from the vector side was the
+    right number here, and it was found by printing the similarities, not by
+    reasoning.</li>
+    <li><strong>Memory is retrieval, not context.</strong> Write every turn to a
+    database and search it. Label it as conversation, never as fact.</li>
+    <li><strong>Assume the failure will be silent.</strong> Missing tables, NaN
+    vectors, wrong chat markers and dropped resources all produced fluent, wrong
+    output with no error. Floors, baselines, artifact scans and a journal are what
+    turn silence into a red line.</li>
+    <li><strong>Replay real questions.</strong> Reading three answers on a phone settled
+    nothing for weeks. Forty questions through a bench settled the biggest design
+    question in an afternoon, and overruled the owner's taste while doing it.</li>
+  </ul>
 </section>
 
 <section>
@@ -518,6 +749,7 @@
     <span class="chip">llama.cpp</span>
     <span class="chip">Gemma 4 E2B · Q4_K_M</span>
     <span class="chip">Gemma 3 1B fallback</span>
+    <span class="chip">EmbeddingGemma 300M</span>
     <span class="chip">SQLite + vectors</span>
     <span class="chip">on-device speech</span>
     <span class="chip">Python pipeline</span>
@@ -529,9 +761,13 @@
     <span class="chip">TestFlight via ASC API</span>
     <span class="chip">xcodegen</span>
   </div>
+  <p>The code is public at
+  <a href="https://github.com/kaymo-ai/Lucy">github.com/kaymo-ai/Lucy</a>, without the
+  camp's data. The README explains what was left out and why.</p>
   <p class="muted mono" style="font-size:12px">Built with heavy use of Claude Code as a
-  pair — every architectural decision, measurement threshold and gate in this page was
-  argued out in that loop.</p>
+  pair. Every architectural decision, threshold and gate on this page was argued out in
+  that loop, and several of the wrong turns above were its confident readings as much
+  as mine.</p>
 </section>
 
 <footer>
