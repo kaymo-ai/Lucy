@@ -1,0 +1,53 @@
+{
+  "id": "medkit-author",
+  "question": "who put together the med kit",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "put",
+    "together",
+    "med",
+    "kit"
+  ],
+  "camp_ids": [
+    614,
+    621,
+    632,
+    637,
+    667
+  ],
+  "doc_ids": [
+    173,
+    78
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 36,
+      "fact_ids": [
+        604,
+        605,
+        603
+      ]
+    },
+    {
+      "entity_id": 7,
+      "fact_ids": [
+        536,
+        527
+      ]
+    },
+    {
+      "entity_id": 24,
+      "fact_ids": [
+        581,
+        589
+      ]
+    }
+  ],
+  "people_sha256": "6ce0930fcf1d9dfccdb7681b10855e263863bde4526174d9008d976a5b5f21af",
+  "general_ids": [],
+  "fact_sheet_sha256": "52e8e04bee4828fc22a5c681cbadc015a3c8da431789ff3f35232cbdd167366d",
+  "prompt_sha256": {
+    "gemma3": "9485316d8f1a41dbdb98363460c9e147d34673cd6c01ef307bbd6c1eac64e1d0",
+    "gemma4": "d6a5aa623a905a04a46c4b9dc530f27a449a93067fb6c96a25ab4c2b97842ddb"
+  }
+}

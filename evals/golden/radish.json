@@ -1,0 +1,44 @@
+{
+  "id": "radish",
+  "question": "what is Radish",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "radish"
+  ],
+  "camp_ids": [],
+  "doc_ids": [
+    78,
+    11
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 221,
+      "fact_ids": [
+        930,
+        931
+      ]
+    },
+    {
+      "entity_id": 219,
+      "fact_ids": [
+        929,
+        928,
+        927,
+        926
+      ]
+    },
+    {
+      "entity_id": 210,
+      "fact_ids": [
+        889
+      ]
+    }
+  ],
+  "people_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "general_ids": [],
+  "fact_sheet_sha256": "62e7f2a3294a0a222edcd955777980304c705d2b77bc039a88e65f2439ae8fdf",
+  "prompt_sha256": {
+    "gemma3": "fc357065f7a339c9fc742adc0a411eb8f4b92576982faa546abee40fa48544b4",
+    "gemma4": "a5fb855cd58872081a62984cede88084decedec6808f760f57cdc8a4296a5a76"
+  }
+}

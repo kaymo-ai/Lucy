@@ -1,0 +1,52 @@
+{
+  "id": "taylor-swift",
+  "question": "when is the Taylor Swift party",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "taylor",
+    "swift",
+    "party"
+  ],
+  "camp_ids": [
+    1075,
+    521,
+    842,
+    1141,
+    11681
+  ],
+  "doc_ids": [
+    78,
+    160
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 18,
+      "fact_ids": [
+        562,
+        568,
+        567,
+        566
+      ]
+    },
+    {
+      "entity_id": 63,
+      "fact_ids": [
+        654,
+        653
+      ]
+    },
+    {
+      "entity_id": 2,
+      "fact_ids": [
+        494
+      ]
+    }
+  ],
+  "people_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "general_ids": [],
+  "fact_sheet_sha256": "46a757fc84d8545011b0d182126c0596ff21f661263fe5a139178c260df2134b",
+  "prompt_sha256": {
+    "gemma3": "90a24861fd8d55255642b99c882377abb6e035166f2842a5e5a628828fd9733e",
+    "gemma4": "ab89bcafd7a44fb288ad554d8c2d23727a294b49011de97438e96d4003fea7ce"
+  }
+}

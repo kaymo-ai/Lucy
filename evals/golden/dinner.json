@@ -1,0 +1,56 @@
+{
+  "id": "dinner",
+  "question": "who cooks dinner at camp",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "cooks",
+    "dinner",
+    "camp"
+  ],
+  "camp_ids": [
+    586,
+    596,
+    627,
+    628,
+    874
+  ],
+  "doc_ids": [
+    78,
+    162
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 235,
+      "fact_ids": [
+        938,
+        939,
+        941,
+        947,
+        948
+      ]
+    },
+    {
+      "entity_id": 1,
+      "fact_ids": [
+        492,
+        493,
+        491
+      ]
+    },
+    {
+      "entity_id": 7,
+      "fact_ids": [
+        531,
+        535,
+        536
+      ]
+    }
+  ],
+  "people_sha256": "a3efbebe6abfd830ca94e166a8d15051aafdff4b437d98d86a483236f7631b5f",
+  "general_ids": [],
+  "fact_sheet_sha256": "d80b9d9a0c99399611ff20280add60c5fc9cd236857448fe43b89fa273053459",
+  "prompt_sha256": {
+    "gemma3": "9713dc5cfd6ac95491d85104d348577b929b8f0440b7e292e34415d899913543",
+    "gemma4": "dd6d3fa24bd98a4acbde7e3cf150dd4213e64cc0e3d95cf4398777ad7a5c5798"
+  }
+}

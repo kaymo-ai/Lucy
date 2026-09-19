@@ -1,0 +1,31 @@
+{
+  "id": "playaella",
+  "question": "what is Playaella",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "playaella"
+  ],
+  "camp_ids": [],
+  "doc_ids": [
+    179,
+    176
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 53,
+      "fact_ids": [
+        642,
+        641,
+        639,
+        640
+      ]
+    }
+  ],
+  "people_sha256": "9092cb963667f718bc57959f9a21e4e1cbc0f6a58da66a150fd5c19e3a9228bd",
+  "general_ids": [],
+  "fact_sheet_sha256": "e337330c63da279a9c54555c2ead0724421fb43e206646a0bc8258d7f0de6b21",
+  "prompt_sha256": {
+    "gemma3": "45ec37fb9d3291219b24e79af4edbba0833e466cf4e93a77f12f5c850ac25ea8",
+    "gemma4": "f40acff8f501cbafa854fc990d3dee3588134e89bdedcd232d49ab16d28b5535"
+  }
+}

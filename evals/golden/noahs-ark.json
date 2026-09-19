@@ -1,0 +1,48 @@
+{
+  "id": "noahs-ark",
+  "question": "what was the Noah's Ark party",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "noah",
+    "ark",
+    "party"
+  ],
+  "camp_ids": [
+    1075,
+    521,
+    842,
+    1141
+  ],
+  "doc_ids": [
+    160,
+    163
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 125,
+      "fact_ids": [
+        770,
+        768,
+        769,
+        767
+      ]
+    },
+    {
+      "entity_id": 197,
+      "fact_ids": []
+    },
+    {
+      "entity_id": 124,
+      "fact_ids": [
+        759
+      ]
+    }
+  ],
+  "people_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "general_ids": [],
+  "fact_sheet_sha256": "e448b1eb0f75ae4d4cc95de8859afad77cb973786eaa94530a596ed385f26d2e",
+  "prompt_sha256": {
+    "gemma3": "3b2df0e4f21d9f841c68f4d04c936c1cd8274bdd131d3b264ef30a17d54ec409",
+    "gemma4": "b93f0051524fb81d5ab158576864a14d1b4b18faf285155c6780bbeb0aec2a8a"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "id": "first-aid",
+  "question": "where is the first aid kit",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "first",
+    "aid",
+    "kit"
+  ],
+  "camp_ids": [
+    447,
+    616,
+    1051,
+    1194,
+    1195
+  ],
+  "doc_ids": [
+    78,
+    173
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 36,
+      "fact_ids": [
+        604,
+        605,
+        603
+      ]
+    },
+    {
+      "entity_id": 245,
+      "fact_ids": [
+        962,
+        966
+      ]
+    },
+    {
+      "entity_id": 10,
+      "fact_ids": [
+        542
+      ]
+    }
+  ],
+  "people_sha256": "4168ab7b3ebf5b12709cd5a9c16a916e1115bc23842d7702bdd4c1f82363a6f1",
+  "general_ids": [],
+  "fact_sheet_sha256": "135da04e01d5b3bc27a80677a0cf49eac590237a61aa4557520bff4e41ec8cb9",
+  "prompt_sha256": {
+    "gemma3": "8e6a4be78583368032b38d3f3c505704c8a8e6ffe84f6fb1bdcb79180f444237",
+    "gemma4": "d1bab2a1073692ac60bde22704420d26dc3308c3626692752c5f0b0577311001"
+  }
+}

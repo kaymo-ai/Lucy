@@ -1,0 +1,180 @@
+# Snails - Native iOS/Android RAG App
+# ====================================
+
+# Source data (private: real names and chat history — never commit)
+PS Processed/
+Whatsapp PS Exports/
+WhatsApp PS Exports/
+# Signup sheets: names, email addresses and phone numbers for ~150 people.
+PS People/
+
+# Exports and sheets dropped loose in the repo root.
+#
+# The rules above cover the DIRECTORIES the pipeline reads. Nothing covered a
+# file dropped at the top level on its way there, and on 2026-08-20 a
+# with-media WhatsApp export sat in the root at 1.26 GB, untracked and
+# unignored -- one `git add -A` from doing again what made this repository
+# unpushable for seven months.
+#
+# Matched by shape rather than by name, because the next export will be called
+# something else. A media export is 2,000 photos and 240 videos around a
+# single 1.8 MB _chat.txt; strip the media before putting it in
+# "Whatsapp PS Exports/", which is where the pipeline actually reads from.
+#
+# The .docx and screenshots rules are the same idea one step further along:
+# they are SOURCES whose products are already committed and much smaller.
+# "Build (2026).docx" is 29 MB and became Lucy/build-2026.md plus 6.1 MB of
+# figures; screenshots/ is 10 MB of phone PNGs that became site/screens/ at a
+# fifth the size. Committing both originals adds 39 MB that nothing reads, to
+# the repository whose whole scar is being too big to push. Convert with
+# scripts/docx_to_markdown.py and site/make_screens.sh; keep the originals
+# wherever you keep the rest of the camp's paperwork.
+/*.zip
+/WhatsApp Chat*
+/PS *.csv
+/PS *.md
+/Production Budget*.csv
+/*.xlsx
+/*.docx
+/screenshots/
+# "Playa data/" is the same again: three saved webapps plus two API fetches,
+# 5 MB, converted to Lucy/playa-*.json by scripts/playa_data.py. The API
+# files (api-art-*.json) are re-fetchable from playamap.org while it is up;
+# the saved pages are not re-savable after the burn, so back the folder up
+# with the corpus rather than deleting it.
+/Playa data/
+
+# Corpus and artifact backups taken before a destructive rebuild. Same size
+# class as the databases themselves, and scripts/output/ is already ignored --
+# these catch copies taken anywhere else.
+*.pre-reingest-*
+*.pre-2026-*
+ps_knowledge.db.bak
+
+# Generated databases and downloaded models
+scripts/output/
+scripts/models/
+SnailsNative/output/
+
+# RunAnywhere SDK (large binary package - clone separately)
+SnailsNative/runanywhere-sdks/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
+# Xcode
+*.xcuserstate
+xcuserdata/
+DerivedData/
+*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Android (future)
+*.iml
+.gradle/
+local.properties
+.idea/
+*.apk
+*.aab
+
+# macOS
+.DS_Store
+*.pem
+
+# Local env files
+.env*.local
+*.local.json
+
+# Signing and release credentials. `.env*.local` did NOT cover .env.release,
+# which holds the App Store Connect issuer and key IDs, and *.p8 is the private
+# key that actually signs uploads -- neither belongs in the repository.
+.env.release
+*.p8
+
+# IDE
+.vscode/
+*.swp
+*~
+.superpowers/
+
+
+# Also match these when they are symlinks into another worktree — a trailing
+# slash only matches real directories, so git happily stages the link itself.
+scripts/output
+scripts/models
+scripts/.venv
+backend/.venv
+SnailsNative/vendor/llama.xcframework
+
+# llama.cpp build artifacts (see SnailsNative/vendor/README.md)
+SnailsNative/vendor/llama.xcframework/
+SnailsNative/vendor/llama.cpp/build-apple/
+SnailsNative/vendor/build-android/
+
+# Render screenshots from render.sh verification sweeps — generated, disposable.
+# Tracked images all live under Lucy/Assets.xcassets/, which this cannot match.
+Lucy/*.png
+Lucy/sweep/
+
+# Spike: models and generated Xcode project
+SnailsNative/spike/models/
+SnailsNative/spike/MemorySpike/MemorySpike.xcodeproj/
+SnailsNative/spike/.build/
+SnailsNative/spike/spike-log.txt
+Lucy/.build/
+Lucy/Lucy.xcodeproj/
+Lucy/Info.plist
+Lucy/render-*.png
+Lucy/soft-*.png
+Lucy/dark-*.png
+Lucy/fun-*.png
+Lucy/speech*.png
+
+# Xcode build output for the app (generated project + build dirs)
+Lucy/.build-device/
+# These two were missing, and `git add -A` swept them in: 460 MB of build
+# output against 5 MB of actual project, including three 67 MB dSYMs and a
+# signed IPA. Everything matching Lucy/.build* is generated and disposable.
+Lucy/.build-check/
+Lucy/.build-release/
+*.xcarchive/
+*.ipa
+*.dSYM/
+# Never again: the 192 MB knowledge database in three places is what made this
+# repository unpushable for seven months. It lives in GCS, not in git.
+ps_knowledge.db
+Lucy/Lucy.xcodeproj/
+.gstack/
+
+# Backend service: secrets, virtualenv, and the VM's own data directories.
+backend/.env
+backend/.venv/
+backend/media/
+backend/pgdata/
+backend/caddy_data/
+backend/caddy_config/
+backend/site/
+output/enrich_cache.db
+
+# Working copies of this repository, checked out inside it. Committing a
+# worktree commits a second copy of the tree -- and the branch it holds is
+# already in git by definition, so there is nothing here to preserve.
+# `.claude/agents/` stays tracked; it is configuration the repo shares.
+.claude/worktrees/
+
+# Journal reports: generated from the phone, and they carry campmates'
+# names and what the camp says about them. Local reading only.
+lucy-journal*.html
+# Gradle output from building the android branch on this machine; the
+# sources live on that branch, the products belong to nobody.
+android/.gradle/
+android/build/
+android/*/build/
+android/local.properties

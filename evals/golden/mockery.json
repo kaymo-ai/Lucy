@@ -1,0 +1,55 @@
+{
+  "id": "mockery",
+  "question": "make fun of Marcus and his terrible generator wiring for me",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "make",
+    "fun",
+    "marcus",
+    "his",
+    "terrible",
+    "generator",
+    "wiring"
+  ],
+  "camp_ids": [
+    1228,
+    1240,
+    589,
+    645,
+    650
+  ],
+  "doc_ids": [
+    78,
+    162
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 53,
+      "fact_ids": [
+        640,
+        641
+      ]
+    },
+    {
+      "entity_id": 112,
+      "fact_ids": [
+        746,
+        747
+      ]
+    },
+    {
+      "entity_id": 240,
+      "fact_ids": [
+        949,
+        954
+      ]
+    }
+  ],
+  "people_sha256": "7cc54aa6de268474b039b5508fc1fbe954429da6713befab187c7b51186cff55",
+  "general_ids": [],
+  "fact_sheet_sha256": "922ca134f6bb017003fd121d4500dc4cb28639bff40a27a852525a321321d223",
+  "prompt_sha256": {
+    "gemma3": "7b8a126031458e7c7f112fe366a6c6e1c5b58d46420949daf6ab33da6f2b5c9e",
+    "gemma4": "9ee6dc2f5ac9895d946e1057f2bb97177efdc2d401f59033e7b40a836295d79c"
+  }
+}

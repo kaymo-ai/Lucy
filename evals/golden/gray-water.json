@@ -1,0 +1,35 @@
+{
+  "id": "gray-water",
+  "question": "what do we do with gray water",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "gray",
+    "water"
+  ],
+  "camp_ids": [
+    757,
+    901,
+    902,
+    903,
+    958
+  ],
+  "doc_ids": [
+    78,
+    162
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 7,
+      "fact_ids": [
+        525
+      ]
+    }
+  ],
+  "people_sha256": "1d9feb140c85639adb444192461a7cf93abe1ae6c39065529c80bf0713209e8d",
+  "general_ids": [],
+  "fact_sheet_sha256": "19bae41bd69646a093c173f916a4bc7f74fe98bdefb2fee897e3e334e87dd465",
+  "prompt_sha256": {
+    "gemma3": "683e7cb4049c97eb3808544e46f568bdb7eb72e6d39c70a914c0359b0255cdc9",
+    "gemma4": "1bbfcfd4c77864b072208094cbf6f8f5be7f5e620843038a16c4925a2bcfbf20"
+  }
+}

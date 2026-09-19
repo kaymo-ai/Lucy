@@ -1,0 +1,209 @@
+name: Lucy
+
+# The Lucy app. Offline knowledge for the Preservation Society: ASK retrieves
+# what the camp already knows, REMEMBER captures a photo and a voice memo for
+# analysis after the burn.
+#
+#   xcodegen generate && ./render.sh          # simulator screenshots
+#   xcodegen generate && ./install-device.sh  # onto a real phone
+#
+# This was `KnowledgePreview`, a screenshot harness. It outlived that job and is
+# now the only app in the repo — the original LucyPT target could not build (it
+# depended on an SDK that is not on disk) and was deleted on 2026-08-09.
+
+options:
+  bundleIdPrefix: ai.kaymo
+  deploymentTarget:
+    iOS: "17.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    # Signing is off for simulator renders and on for device builds, which is
+    # where the microphone actually exists.
+    DEVELOPMENT_TEAM: 78J6KTETAK
+    CODE_SIGN_STYLE: Automatic
+    # The provenance stamp below reads git and edits the built Info.plist;
+    # Xcode's script sandbox blocks both and fails the phase with a message
+    # about a file that plainly exists.
+    ENABLE_USER_SCRIPT_SANDBOXING: "NO"
+
+targets:
+  Lucy:
+    type: application
+    platform: iOS
+    sources:
+      - path: .
+        includes:
+          - "*.swift"
+      - path: Assets.xcassets
+      # The enrichment database is gitignored build output: 129 entities, 484
+      # dated facts, 4,037 evidence rows, slimmed to the source rows the
+      # evidence actually cites. Regenerate with:
+      #   python scripts/build_preview_db.py
+      # It must be a `sources` entry with buildPhase: resources — a top-level
+      # `resources:` key is silently ignored by xcodegen and produces an empty
+      # bundle.
+      - path: ../scripts/output/enriched_preview.db
+        buildPhase: resources
+        optional: true
+      # The camp's sign-up sheet, converted from the two Google Sheets
+      # exports. A document rather than a database row: it is 2026 data that
+      # arrived after the corpus was built, and the Info tab renders it
+      # directly with no model in the path.
+      - path: ps-2026-shifts.md
+        buildPhase: resources
+        optional: true
+      # The build guide, converted from the camp's "Build (2026).docx" with
+      # scripts/docx_to_markdown.py. The figures are a FOLDER REFERENCE, not a
+      # group: they are looked up by file name at runtime, so they have to
+      # keep their names and stay loose in the bundle rather than being
+      # flattened into an asset catalog.
+      - path: build-2026.md
+        buildPhase: resources
+        optional: true
+      - path: BuildFigures
+        buildPhase: resources
+        type: folder
+        optional: true
+      # What Black Rock City published this year, converted from the three
+      # webapps saved to `Playa data/` with scripts/playa_data.py. JSON and
+      # not markdown because these are records, not prose -- 4,224 events,
+      # 1,181 camps, 326 art pieces, all with the same fields.
+      #
+      # `playa-counts.json` is a few hundred bytes holding only the totals.
+      # It exists so the Info tab, which is drawn on every launch, can caption
+      # three rows without decoding the 1.1 MB of events to count them.
+      - path: playa-events-2026.json
+        buildPhase: resources
+        optional: true
+      - path: playa-camps-2026.json
+        buildPhase: resources
+        optional: true
+      - path: playa-art-2026.json
+        buildPhase: resources
+        optional: true
+      - path: playa-counts.json
+        buildPhase: resources
+        optional: true
+    dependencies:
+      # llama.xcframework at b10333 builds llama.framework as a DYNAMIC library,
+      # so it must be embedded and signed — "Do Not Embed" gives a dyld crash at
+      # launch. The memory spike established this the hard way.
+      - framework: ../SnailsNative/vendor/llama.xcframework
+        embed: true
+        codeSign: true
+    # Which commit produced the app on the phone, stamped into the BUILT
+    # product's Info.plist and read back by BuildInfo.swift for the menu.
+    # The product, not the source tree: nothing is generated into git's view
+    # of the world, and a post-build phase runs before signing, so the
+    # signature covers the stamp. A trailing + means the tree had
+    # uncommitted changes — a cable build mid-work usually does.
+    postBuildScripts:
+      - name: Stamp build provenance
+        basedOnDependencyAnalysis: false
+        # The input declaration is load-bearing even though the phase runs
+        # every build: without it the build system starts an input-less
+        # script at an arbitrary point, which on a clean build is before
+        # the Info.plist exists (the guard exits and nothing is stamped)
+        # and on an incremental one can be before the plist is reprocessed
+        # (the stamp is written, then overwritten). The input is what
+        # orders the phase after the plist producer.
+        inputFiles:
+          - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
+        script: |
+          plist="${TARGET_BUILD_DIR}/${INFOPLIST_PATH}"
+          [ -f "$plist" ] || { echo "warning: no Info.plist to stamp at $plist"; exit 0; }
+          commit="$(git -C "${PROJECT_DIR}" rev-parse --short HEAD 2>/dev/null || echo unknown)"
+          if [ -n "$(git -C "${PROJECT_DIR}" status --porcelain 2>/dev/null)" ]; then
+            commit="${commit}+"
+          fi
+          when="$(date '+%d %b %H:%M')"
+          /usr/libexec/PlistBuddy -c "Delete :LucyBuildCommit" "$plist" 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Delete :LucyBuildDate" "$plist" 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Add :LucyBuildCommit string ${commit}" "$plist"
+          /usr/libexec/PlistBuddy -c "Add :LucyBuildDate string ${when}" "$plist"
+    settings:
+      base:
+        # Debug overrides this to ai.kaymo.Lucy.dev -- see below.
+        PRODUCT_BUNDLE_IDENTIFIER: ai.kaymo.Lucy
+        BUNDLE_DISPLAY_NAME: Lucy
+        TARGETED_DEVICE_FAMILY: "1"
+        # What testers see. Bump by hand when it means something.
+        MARKETING_VERSION: "1.0"
+        # Must be unique for every upload or App Store Connect rejects the
+        # build. release.sh overrides it with the git commit count, so it goes
+        # up on its own and never collides.
+        CURRENT_PROJECT_VERSION: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_ENTITLEMENTS: Lucy.entitlements
+      configs:
+        # The build you install over the cable is a DIFFERENT APP from the one
+        # testers get. Same code, different bundle identifier, so both live on
+        # the phone at once.
+        #
+        # Without this, every `device.sh` fights the TestFlight install: iOS
+        # refuses to put a cable-signed build over a TestFlight one, so you
+        # delete the app -- and deleting takes Documents, which is where the
+        # 3.11 GB model lives. That trap cost an evening on 2026-08-09 and
+        # nearly cost another today.
+        #
+        # The cost is two models, 6.2 GB: containers are sandboxed, so each app
+        # keeps its own. Push the dev one over the cable; the TestFlight one
+        # downloads through the gate like a tester's would.
+        Debug:
+          PRODUCT_BUNDLE_IDENTIFIER: ai.kaymo.Lucy.dev
+          BUNDLE_DISPLAY_NAME: Lucy Dev
+    info:
+      path: Info.plist
+      properties:
+        UILaunchScreen: {}
+        # Two apps called "Lucy" on one home screen is unreadable; the dev one
+        # says so on its label.
+        CFBundleDisplayName: $(BUNDLE_DISPLAY_NAME)
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # Lucy uses no encryption beyond what iOS itself provides for HTTPS.
+        # Without this key TestFlight asks the export-compliance question on
+        # every single upload and holds the build until it is answered.
+        ITSAppUsesNonExemptEncryption: false
+        NSCameraUsageDescription: >-
+          REMEMBER takes a photo of the thing you want the camp to know about later.
+          It stays on the phone until you're back on signal.
+        NSMicrophoneUsageDescription: >-
+          Lucy listens to your question so you don't have to type it in gloves and dust.
+        NSSpeechRecognitionUsageDescription: >-
+          Your question is turned into text on the phone itself. Nothing is sent anywhere —
+          there's no signal on playa anyway.
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+
+  LucyUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    dependencies:
+      - target: Lucy
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ai.kaymo.LucyUITests
+        TEST_TARGET_NAME: Lucy
+        # Pre-existing gap: this target has never had an Info.plist and so
+        # has never actually built -- nothing before Task 6 ran the `test`
+        # action, only `build`, so it went unnoticed. Needed to unblock
+        # LucyTests below: the auto-generated Lucy scheme's test action
+        # builds every test target that depends on Lucy, so
+        # `-only-testing:LucyTests` still compiles this one.
+        GENERATE_INFOPLIST_FILE: YES
+
+  LucyTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [Tests]
+    dependencies:
+      - target: Lucy
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ai.kaymo.LucyTests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Lucy.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Lucy"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        GENERATE_INFOPLIST_FILE: YES

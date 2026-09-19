@@ -1,0 +1,59 @@
+# The whole camp server: Postgres, the API, and Caddy in front doing TLS.
+#
+# This same file is meant to run on a box behind a playa router with no
+# internet. To do that, point LUCY_HOSTNAME at a local name and Caddy will
+# serve it over plain HTTP instead of reaching for Let's Encrypt. Nothing else
+# moves -- which is the entire reason this is containers and Postgres rather
+# than Firebase and a pile of managed services.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: lucy
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    restart: unless-stopped
+    environment:
+      LUCY_ENV: production
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/lucy
+      LUCY_JOIN_CODE: ${LUCY_JOIN_CODE}
+      LUCY_SITE_CODE: ${LUCY_SITE_CODE}
+      LUCY_ADMIN_CODE: ${LUCY_ADMIN_CODE}
+      LUCY_MEDIA_ROOT: /data/media
+      LUCY_SITE_ROOT: /srv/site
+    volumes:
+      - ./media:/data/media
+      # The instructions page. Read-only: the API serves it and never writes
+      # to it.
+      - ./site:/srv/site:ro
+    depends_on:
+      db:
+        condition: service_healthy
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      LUCY_HOSTNAME: ${LUCY_HOSTNAME}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # The certificate lives here. Losing it means asking Let's Encrypt for a
+      # new one, and they rate-limit that, so this directory outlives the
+      # container on purpose.
+      - ./caddy_data:/data
+      - ./caddy_config:/config
+    depends_on:
+      - api

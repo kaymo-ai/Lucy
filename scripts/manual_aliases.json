@@ -1,0 +1,28 @@
+{
+  "_readme": [
+    "Aliases a human added, keyed by the person's canonical name in `person`.",
+    "",
+    "Everything else in person_alias is derived: spellings the corpus itself",
+    "used before dedupe folded them together, and first/last names split off",
+    "full ones. That covers people whose variants were written down somewhere.",
+    "It cannot cover a name the corpus never spells wrong but a recogniser",
+    "always does.",
+    "",
+    "Piotr is the standing example. He is one word, so there are no name parts",
+    "to split, and the corpus spells him correctly every time -- so the derived",
+    "passes give him nothing at all, while on-device dictation has produced",
+    "'pure', 'PO de', 'Pura', 'pee', 'po tate' and 'pita' in a single session.",
+    "",
+    "Rules for adding one:",
+    "  - it must be a way somebody actually refers to that person, or a way a",
+    "    recogniser actually mangles their name. Not a guess.",
+    "  - it must not be an ordinary English word people would say for other",
+    "    reasons. 'pure' is deliberately absent: 'is the water pure' is a real",
+    "    camp question, and claiming it means Piotr would break that question",
+    "    to fix this one. SpeechOverrides.swift excludes it for the same",
+    "    reason and says so.",
+    "  - the canonical name must match `person.name` exactly, or it is skipped",
+    "    loudly rather than silently.",
+    "This public copy ships the file empty; the camp's own entries are not published."
+  ]
+}

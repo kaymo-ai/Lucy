@@ -1,0 +1,6 @@
+pytest==8.3.4
+llama-cpp-python==0.3.34
+numpy==2.2.1
+tqdm==4.67.1
+google-genai==2.17.0
+pyyaml

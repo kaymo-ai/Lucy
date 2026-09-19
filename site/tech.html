@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lucy — an offline AI assistant, built for the desert</title>
+<meta name="description" content="Case study: an iPhone app that runs a multi-billion-parameter LLM with no network, grounded in ten years of one Burning Man camp's collective memory.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lucy — an offline AI assistant, built for the desert">
+<meta property="og:description" content="A 3 GB language model on a phone, a retrieval layer that keeps it honest, and a knowledge pipeline that turns 27,000 WhatsApp messages into answers. No signal required.">
+<meta property="og:url" content="https://lucy.marcusfoster.com/tech">
+<meta name="theme-color" content="#16181C">
+<style>
+  :root{
+    --ground:#16181C;
+    --raised:#22262C;
+    --text:#ECEDE9;
+    --muted:#8B9199;
+    --accent:#F04A1E;
+    --keep:#3E8B9C;
+    --gold:#FFB23E;
+    --hairline:rgba(236,237,233,0.18);
+    --radius:14px;
+    --radius-sm:5px;
+    --display:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--text);
+    font-family:var(--display);
+    font-weight:450;
+    font-size:17px;
+    line-height:1.55;
+    padding:0 22px 90px;
+  }
+  .wrap{max-width:940px;margin:0 auto}
+  section > p, section > ul, section > ol, .lede{max-width:38em}
+
+  h1,h2,h3{
+    font-weight:900;font-stretch:condensed;letter-spacing:-0.02em;
+    margin:0;line-height:1.04;text-wrap:balance;
+  }
+  h1{font-size:clamp(46px,13vw,76px);text-transform:uppercase}
+  h1 .dim{color:var(--muted)}
+  h2{font-size:clamp(28px,7vw,38px);text-transform:uppercase;margin-bottom:14px}
+  h3{font-size:19px;text-transform:uppercase;letter-spacing:0;margin:22px 0 6px}
+  p{margin:0 0 15px}
+  a{color:var(--accent)}
+  strong{font-weight:700;color:var(--text)}
+  ul{margin:0 0 15px;padding-left:1.2em}
+  li{margin-bottom:8px}
+  li::marker{color:var(--accent)}
+
+  .eyebrow{
+    font-size:11px;font-weight:800;text-transform:uppercase;
+    letter-spacing:0.16em;color:var(--muted);font-stretch:condensed;
+    margin:0 0 10px;
+  }
+  .mono{font-family:var(--mono);font-size:13px}
+  .muted{color:var(--muted)}
+
+  header{padding:56px 0 10px}
+  .mark{display:flex;align-items:center;gap:11px;margin-bottom:26px}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);flex:none}
+  .mark a{
+    font-weight:900;font-stretch:condensed;font-size:15px;
+    letter-spacing:0.17em;color:var(--muted);text-decoration:none;
+    text-transform:uppercase;
+  }
+  .mark a:hover{color:var(--accent)}
+  .lede{font-size:20px;color:var(--muted);margin-top:20px;max-width:36em}
+  .lede strong{color:var(--text)}
+
+  section{padding:44px 0;border-top:1px solid var(--hairline)}
+  section:first-of-type{border-top:none}
+
+  /* ---- the numbers strip ---- */
+  .stats{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:12px;margin:26px 0 4px;
+  }
+  .stat{
+    background:var(--raised);border-radius:var(--radius);
+    padding:14px 16px;border:1px solid var(--hairline);
+  }
+  .stat b{
+    display:block;font-size:26px;font-weight:900;font-stretch:condensed;
+    letter-spacing:-0.01em;color:var(--text);line-height:1.1;
+  }
+  .stat span{font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+  /* ---- the feature grid ---- */
+  .features{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:12px;margin:22px 0 26px;
+  }
+  .feature{
+    background:var(--raised);border:1px solid var(--hairline);
+    border-radius:var(--radius);padding:14px 16px;
+  }
+  .feature b{
+    display:block;font-weight:800;font-stretch:condensed;
+    text-transform:uppercase;font-size:14.5px;letter-spacing:0.03em;
+    margin-bottom:3px;
+  }
+  .feature span{font-size:14px;color:var(--muted);line-height:1.45}
+  .twoshots{display:flex;gap:22px;flex-wrap:wrap}
+  .twoshots .shot{flex:1 1 260px;min-width:230px;max-width:340px}
+
+  /* ---- the flow diagram ---- */
+  .flow{margin:8px 0 6px}
+  .lane{
+    background:var(--raised);border:1px solid var(--hairline);
+    border-radius:var(--radius);padding:18px;margin-bottom:14px;
+  }
+  .lane .eyebrow{margin-bottom:14px}
+  .lane .eyebrow em{font-style:normal;color:var(--gold)}
+  /* One row of boxes on a wide screen, one column on a phone. The arrows
+     turn with the axis: a sideways arrow beside a stacked column reads as
+     pointing at the margin. */
+  .nodes{display:flex;align-items:stretch;gap:0}
+  .node{
+    background:var(--ground);border:1px solid var(--hairline);
+    border-radius:var(--radius-sm);padding:10px 13px;
+    font-family:var(--mono);font-size:12.5px;line-height:1.45;
+    flex:1 1 0;min-width:0;
+  }
+  .node b{
+    display:block;font-family:var(--display);font-weight:800;
+    font-stretch:condensed;font-size:14px;letter-spacing:0.02em;
+    text-transform:uppercase;color:var(--text);margin-bottom:2px;
+  }
+  .node span{color:var(--muted)}
+  .node.hot{border-color:rgba(240,74,30,0.55)}
+  .node.hot b{color:var(--accent)}
+  .arrow{
+    flex:0 0 auto;align-self:center;color:var(--accent);
+    font-weight:900;padding:0 8px;font-size:16px;
+  }
+  .arrow::before{content:"\2192"}
+  @media (max-width:859px){
+    .nodes{flex-direction:column}
+    .arrow{padding:4px 0;align-self:center}
+    .arrow::before{content:"\2193"}
+  }
+  .flow .between{
+    text-align:center;color:var(--accent);font-weight:900;font-size:16px;
+    margin:-4px 0 10px;
+  }
+  .flow .between span{
+    font-family:var(--mono);font-weight:400;font-size:11.5px;
+    color:var(--muted);margin-left:8px;
+  }
+  .loop{
+    font-family:var(--mono);font-size:11.5px;color:var(--gold);
+    margin-top:12px;padding-top:10px;border-top:1px dashed var(--hairline);
+  }
+
+  /* ---- copy beside a phone ---- */
+  .split{display:flex;gap:30px;align-items:flex-start;flex-wrap:wrap;margin-top:8px}
+  .split > div{flex:1 1 320px;min-width:280px}
+  .split .shot{flex:0 1 280px;min-width:220px}
+  .shot{margin:0;max-width:100%}
+  .shot img{
+    display:block;width:100%;height:auto;
+    max-height:520px;object-fit:contain;object-position:top;
+    border-radius:var(--radius);border:1px solid var(--hairline);
+    background:var(--raised);
+  }
+  .shot figcaption{
+    font-family:var(--mono);font-size:12px;color:var(--muted);
+    margin-top:8px;line-height:1.5;
+  }
+
+  /* ---- measured claims ---- */
+  .measure{
+    background:var(--raised);border-left:3px solid var(--accent);
+    border-radius:var(--radius-sm);padding:14px 18px;margin:18px 0;
+    max-width:38em;
+  }
+  .measure p{margin:0}
+  .measure .mono{color:var(--gold)}
+
+  /* ---- field notes ---- */
+  dl{margin:0;max-width:40em}
+  dt{
+    font-weight:800;font-stretch:condensed;text-transform:uppercase;
+    font-size:15px;letter-spacing:0.02em;margin-top:20px;
+  }
+  dd{margin:4px 0 0;color:var(--muted)}
+  dd strong{color:var(--text);font-weight:700}
+
+  /* ---- colophon ---- */
+  .stack{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+  .chip{
+    font-family:var(--mono);font-size:12px;color:var(--muted);
+    border:1px solid var(--hairline);border-radius:999px;
+    padding:5px 12px;white-space:nowrap;
+  }
+  footer{
+    padding-top:40px;border-top:1px solid var(--hairline);
+    color:var(--muted);font-size:15px;
+  }
+  footer a{font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="mark"><span class="dot"></span><a href="https://marcusfoster.com">marcusfoster.com</a></div>
+  <p class="eyebrow">Case study · iOS · on-device LLM · 2026</p>
+  <h1>Lucy<br><span class="dim">Offline AI</span></h1>
+  <p class="lede">An iPhone app that runs a <strong>multi-billion-parameter language model with no
+  network at all</strong>, and answers questions out of ten years of one Burning Man camp's
+  collective memory. Built for Black Rock City, where there is no signal, no cloud,
+  and no second chance to look something up.</p>
+</header>
+
+<section>
+  <h2>The constraint is the design</h2>
+  <p>Preservation Society is a Burning Man theme camp: a few hundred people, a decade of
+  accumulated know-how, and one week a year when all of it matters at once. Who has the
+  generator manual. What socket the lag bolts take. Where the water barrels live. The
+  answers exist, scattered across 27,000 WhatsApp messages and a decade of documents,
+  and they are needed in a place with no connectivity whatsoever.</p>
+  <p>So everything runs on the phone. The model, the search index, the knowledge base,
+  the city's own event listings. The only network feature in the app is a Sync button,
+  used when someone passes through cell coverage, and the app is complete without it.</p>
+  <div class="stats">
+    <div class="stat"><b>0</b><span>bytes of network per answer</span></div>
+    <div class="stat"><b>3.11&nbsp;GB</b><span>model, quantised, on device</span></div>
+    <div class="stat"><b>27,163</b><span>WhatsApp messages ingested</span></div>
+    <div class="stat"><b>2%</b><span>invention rate, measured</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>How it fits together</h2>
+  <p>Two halves. A build-time pipeline on my Mac turns raw camp history into a small,
+  clean SQLite database, and a run-time loop on the phone turns that database plus a
+  local LLM into answers. The expensive intelligence runs once, at build time; the
+  phone only ever does retrieval and phrasing.</p>
+
+  <div class="flow">
+    <div class="lane">
+      <p class="eyebrow">Build time · <em>Mac + cloud, before the burn</em></p>
+      <div class="nodes">
+        <div class="node"><b>Raw history</b><span>27k WhatsApp messages · 144 documents (cut from 627)</span></div>
+        <div class="arrow"></div>
+        <div class="node"><b>Enrichment</b><span>Gemini extracts entities, dated facts, evidence with citations</span></div>
+        <div class="arrow"></div>
+        <div class="node"><b>Embeddings</b><span>vector per claim, verified complete before packaging</span></div>
+        <div class="arrow"></div>
+        <div class="node hot"><b>Gates</b><span>redaction check · baseline diff · evidence integrity</span></div>
+      </div>
+      <p class="loop">↻ content-keyed cache: a rebuild only pays for messages that changed, so iteration went from hours to minutes</p>
+    </div>
+    <div class="between">↓ <span>knowledge.db · 17.6 MB of SQLite, shipped inside the app</span></div>
+    <div class="lane">
+      <p class="eyebrow">Run time · <em>iPhone, offline</em></p>
+      <div class="nodes">
+        <div class="node"><b>Question</b><span>typed or spoken (on-device speech)</span></div>
+        <div class="arrow"></div>
+        <div class="node"><b>Retrieval</b><span>term + vector search across facts, people, docs, lore</span></div>
+        <div class="arrow"></div>
+        <div class="node"><b>Fact sheet</b><span>only rows that matched, ranked by relevance</span></div>
+        <div class="arrow"></div>
+        <div class="node hot"><b>Gemma 4</b><span>llama.cpp, phrases the facts and nothing else</span></div>
+      </div>
+      <p class="loop">↻ every turn is journalled — QUESTION / FACTS GIVEN / ANSWERED — and the journal replays as an eval set for every prompt change</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="split">
+    <div>
+      <h2>Grounded, and measured to be</h2>
+      <p>The core invariant: <strong>retrieval supplies the facts; the model only phrases
+      them.</strong> A camp particular — a name, a date, a number, who owns what — must trace
+      to a database row, because a confidently wrong answer sends somebody to the wrong
+      warehouse in a whiteout.</p>
+      <div class="measure">
+        <p>With no grounding rules the model invents a camp-specific claim in
+        <span class="mono">82%</span> of answers. With them:
+        <span class="mono">2%</span>. Measured by replaying the owner's real questions
+        from the journal and scoring every answer against the facts it was given.</p>
+      </div>
+      <p>That number is the design authority. Every prompt change, every model swap, every
+      retrieval tweak gets replayed against real questions before it ships. When I
+      fine-tuned the model on the camp's own voice, the eval said the tuned model had
+      learned the register but confabulated more, so it lost, and the measurement is why
+      taste didn't get a vote.</p>
+      <p>General knowledge stays the model's own. She's allowed to know the desert is hot;
+      she isn't allowed to guess where the camp keeps its shade structure.</p>
+    </div>
+    <figure class="shot">
+      <img src="tech/convo.jpg" alt="A real exchange with Lucy, names blurred" width="900" height="1957">
+      <figcaption>A real exchange, on-device. The phone number came from a retrieval
+      row; the lore answer is composed from the camp's own record of a running
+      joke. Names and numbers blurred for this page.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <h2>What she actually does</h2>
+  <p>One app, four tabs, everything below working with airplane mode on.</p>
+  <div class="features">
+    <div class="feature"><b>Hold to talk</b><span>On-device speech recognition,
+      forced — the recogniser is never allowed to try the network. She answers
+      in text you can read in your tent without waking anyone.</span></div>
+    <div class="feature"><b>Grounded chat</b><span>Answers phrased by the local
+      LLM from retrieved rows: who owns what, where things live, what the camp
+      decided and when.</span></div>
+    <div class="feature"><b>Memory across reboots</b><span>Every exchange lands
+      in SQLite and becomes retrievable context. An "Earlier" control pages the
+      old thread back in.</span></div>
+    <div class="feature"><b>The people directory</b><span>309 campers, searchable
+      by name or by what they're known for — "who fixes bikes" is a people
+      question, not a facts question.</span></div>
+    <div class="feature"><b>Capture for the camp</b><span>Photos and voice notes,
+      transcribed on the phone, queued offline, synced when someone passes
+      through coverage.</span></div>
+    <div class="feature"><b>The paperwork</b><span>The full camp manual, the
+      illustrated build guide, and the shift schedule — searchable, foldable,
+      bundled in the app.</span></div>
+    <div class="feature"><b>The whole city</b><span>Black Rock City's 4,224
+      published events by day and hour with category filters, plus every camp
+      and art piece.</span></div>
+    <div class="feature"><b>Her voice, dialled</b><span>Register (dry to loose)
+      and answer length are user settings — the two dials that move tone
+      without touching the grounding rules.</span></div>
+    <div class="feature"><b>Her brain, chosen</b><span>Auto-picks Full or Light
+      by RAM, with a manual override for phones the heuristic gets
+      wrong.</span></div>
+    <div class="feature"><b>Provenance everywhere</b><span>Every screen can say
+      which build, which knowledge snapshot, which model — so a bug report
+      names its exact commit.</span></div>
+  </div>
+  <div class="twoshots">
+    <figure class="shot">
+      <img src="tech/memory.jpg" alt="The Memory tab with the camera viewfinder" width="900" height="1957">
+      <figcaption>Memory: point, shoot or hold to talk, and the note is queued
+      for the camp.</figcaption>
+    </figure>
+    <figure class="shot">
+      <img src="tech/people.jpg" alt="The people directory, names blurred" width="900" height="1774">
+      <figcaption>The directory, searchable by what people are known for.
+      Names and initials are blurred here; on the phone they are the point.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <h2>Inference on a phone that's also a phone</h2>
+  <p>The model is <strong>Gemma 4 E2B</strong>, quantised to Q4_K_M (3.11 GB), running on
+  <strong>llama.cpp</strong> compiled into the app as an xcframework. Smaller phones get
+  <strong>Gemma 3 1B</strong> (806 MB) instead, chosen by RAM at first launch, with a
+  manual override after an 8 GB iPhone 16 Pro measured 7.46 GiB usable and got
+  misclassified by my threshold. Auto is right for most phones; the override exists for
+  when it's wrong in either direction.</p>
+  <p>Two details that earn their keep:</p>
+  <ul>
+    <li><strong>Chat-template detection by tokenisation, not filename.</strong> The two Gemma
+    generations use different turn markers. The markers were once hardcoded, so every
+    prompt reached the bigger model wrapped in text it read as ordinary characters, and
+    nothing looked broken. Now the app tokenises a probe string and counts tokens to
+    decide which dialect the loaded weights actually speak.</li>
+    <li><strong>Memory that survives reboots without a context window.</strong> There is no
+    rolling transcript in the prompt. Every exchange lands in SQLite, becomes retrievable
+    like any other fact, and the KV cache is treated as scratch. Follow-ups work because
+    the previous turn's terms blend into the next search, not because the model is
+    holding the conversation in RAM.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="split">
+    <div>
+      <h2>The knowledge pipeline</h2>
+      <p>Group chat is not a knowledge base. The pipeline's job is judgement: deciding that
+      a running joke is actually a named tradition, that a rambling thread contains a
+      decision, that a phrase is a thing the camp has a word for.</p>
+      <p>Choices that mattered, each settled by measurement rather than taste:</p>
+      <ul>
+        <li><strong>Capability beats throughput at build time.</strong> On a byte-identical
+        corpus, the stronger extraction model found 149 distinct entities where the fast
+        one found 64 — and the hundred it dropped were precisely the camp's culture, not
+        its inventory.</li>
+        <li><strong>Documents were cut 77% using an orphan-term test:</strong> a document may
+        be dropped only if every distinctive word in it survives somewhere in the kept
+        set. Three plausible folder-based rules each failed that test by deleting
+        something load-bearing, like the only document containing "tourniquet".</li>
+        <li><strong>The cache is keyed by content, never by row id.</strong> Rebuilds recreate
+        the database and renumber everything; a row-keyed cache would serve answers
+        belonging to whatever message inherited the id, and look healthy doing it.</li>
+        <li><strong>A build must beat its baseline.</strong> The packaging gate refuses any
+        build where a table shrank more than 25% against the last human-accepted one.
+        Regressions that pass every unit test still have to explain a missing thousand
+        rows.</li>
+      </ul>
+    </div>
+    <figure class="shot">
+      <img src="tech/buildguide.jpg" alt="The build guide with the camp plan figure" width="900" height="1957">
+      <figcaption>One product of the pipeline: the camp's 29 MB build manual,
+      converted to markdown with its 15 figures intact — because no paraphrase
+      of a camp plan is any use to somebody placing a truck.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="split">
+    <div>
+      <h2>Privacy by ownership, not by shape</h2>
+      <p>The corpus is a decade of a real community's chat. The redaction layer decides what
+      ships by asking <em>whose</em> a fact is, not what it looks like: a campmate's home
+      address must never leave my Mac, while the camp's own warehouse address absolutely
+      must ship, because that's the answer to a real question. A shape rule ("strip
+      everything address-like") gets exactly one of those right.</p>
+      <p>The gate checks the <strong>artifact</strong>, not the code: a second, deliberately
+      independent scanner reads the final SQLite file before every release and refuses
+      the build on a hit. It has disagreed with the builder once, catching ten personal
+      phone numbers a "safe" refactor exposed through a table the justifying measurement
+      hadn't scanned. That disagreement is the design working.</p>
+      <p>This public page follows the same rule: every screenshot here shows the app's own
+      chrome or the city's published data, no campmates.</p>
+    </div>
+    <figure class="shot">
+      <img src="tech/events.jpg" alt="The city's event listings" width="900" height="1957">
+      <figcaption>Black Rock City's 4,224 published events, folded by day and hour, filterable, searchable — converted from scraped listings into shippable JSON by a pipeline that also deduped the source's three distinct ways of repeating itself.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <h2>The sync server, for when the desert ends</h2>
+  <p>Campers capture notes and photos all week; a small FastAPI + Postgres service
+  receives them whenever a phone finds coverage. Offline-first shapes every decision:</p>
+  <ul>
+    <li><strong>The note's id is minted on the phone.</strong> Retries on a half-dead
+    connection are idempotent because the server never assigns identity.</li>
+    <li><strong>Feed ordering is a server-side sequence assigned under an advisory
+    lock</strong>, so a client polling <span class="mono">?since=N</span> can never step
+    over a note whose transaction committed late.</li>
+    <li><strong>Blobs are content-addressed and never deleted</strong> — identical bytes
+    from two phones are one file, and deleting one member's note must not blind the
+    other's.</li>
+  </ul>
+  <p>The round trip was verified end to end: a note with a photo and a voice memo, up
+  from the phone and back, byte-identical with EXIF intact.</p>
+</section>
+
+<section>
+  <div class="split">
+    <div>
+      <h2>Shipping discipline</h2>
+      <p>One developer, forty testers, no staging environment in the desert. The release
+      path compensates:</p>
+      <ul>
+        <li><strong>199 unit tests</strong> plus a screenshot harness that renders any screen
+        of the app headlessly in the simulator — every UI claim in this page's images
+        came out of that harness, and UI bugs get caught by looking, not hoping.</li>
+        <li><strong>Resources are verified inside the built IPA</strong>, because the project
+        generator drops misplaced bundle entries silently. The tests open the artifact,
+        not the source tree.</li>
+        <li><strong>Debug and release are different apps</strong> with different bundle ids,
+        and the shipping split is proven at the binary level with
+        <span class="mono">strings</span> on the release build, not trusted to compiler
+        flags.</li>
+        <li><strong>Unattended TestFlight uploads</strong> via the App Store Connect API with
+        a hand-rolled ES256 JWT; the build number is the commit count, so every build on
+        a tester's phone names its exact commit.</li>
+      </ul>
+    </div>
+    <figure class="shot">
+      <img src="tech/art.png" alt="Searching the art listing" width="900" height="1957">
+      <figcaption>Search reaches into descriptions, not just names: "dodecahedron" finds Nova by what it is. The descriptions were recovered from the source site's own API after the saved page turned out to fetch them lazily.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <h2>Field notes</h2>
+  <p class="muted">Things this project taught me, each the hard way, each now guarded by a test or a gate.</p>
+  <dl>
+    <dt>Silence is the default failure mode</dt>
+    <dd>A missing SQLite table makes the query return <strong>nothing</strong> rather than
+    less; a dropped bundle resource ships an empty screen; a wrong chat template produces
+    fluent answers to malformed prompts. The system is designed so its likely failures
+    are loud: floors, baselines, artifact checks, honest "not in this build" screens.</dd>
+    <dt>Evaluate against reality, not vibes</dt>
+    <dd>The journal of real questions is the eval set. It settled prompt changes, the
+    model tier threshold, a fine-tune that lost, and a retrieval rework — each time
+    against the same 2%-invention baseline, each time overruling somebody's taste,
+    sometimes mine.</dd>
+    <dt>Trim harder than feels right, with a safety net</dt>
+    <dd>Cutting 77% of documents cost almost nothing — but only the orphan-term test
+    could prove that, and every cut is a skip rule, not a deletion, so being wrong
+    costs one line.</dd>
+    <dt>An index can lie</dt>
+    <dd>A partial index stores the <strong>result</strong> of its predicate at write time.
+    Change the function behind it and queries silently use the old truth until you
+    rebuild the index. Migrations 005 and 006 exist because of this.</dd>
+  </dl>
+</section>
+
+<section>
+  <h2>Stack</h2>
+  <div class="stack">
+    <span class="chip">Swift / SwiftUI</span>
+    <span class="chip">llama.cpp</span>
+    <span class="chip">Gemma 4 E2B · Q4_K_M</span>
+    <span class="chip">Gemma 3 1B fallback</span>
+    <span class="chip">SQLite + vectors</span>
+    <span class="chip">on-device speech</span>
+    <span class="chip">Python pipeline</span>
+    <span class="chip">Gemini enrichment</span>
+    <span class="chip">FastAPI</span>
+    <span class="chip">PostgreSQL</span>
+    <span class="chip">Caddy</span>
+    <span class="chip">GCE</span>
+    <span class="chip">TestFlight via ASC API</span>
+    <span class="chip">xcodegen</span>
+  </div>
+  <p class="muted mono" style="font-size:12px">Built with heavy use of Claude Code as a
+  pair — every architectural decision, measurement threshold and gate in this page was
+  argued out in that loop.</p>
+</section>
+
+<footer>
+  <p><strong>Marcus Foster</strong> · <a href="https://marcusfoster.com">marcusfoster.com</a></p>
+  <p class="mono" style="font-size:12px">Screenshots show the app's own chrome and Black
+  Rock City's published listings only. The camp's knowledge base, and its people, stay
+  in the dust where they belong.</p>
+</footer>
+
+</div>
+</body>
+</html>

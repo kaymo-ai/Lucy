@@ -1,0 +1,53 @@
+{
+  "id": "lucy-vocative",
+  "question": "lucy how do we get water",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "lucy",
+    "water"
+  ],
+  "camp_ids": [
+    585,
+    670,
+    691,
+    692,
+    693
+  ],
+  "doc_ids": [
+    78,
+    162
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 10,
+      "fact_ids": [
+        557,
+        556,
+        555,
+        554
+      ]
+    },
+    {
+      "entity_id": 84,
+      "fact_ids": [
+        692,
+        693
+      ]
+    },
+    {
+      "entity_id": 198,
+      "fact_ids": [
+        863,
+        864,
+        865
+      ]
+    }
+  ],
+  "people_sha256": "26b779064bb3955dc9ea9175b1e92600a180025cc28fa07006e7b3e7642a5e98",
+  "general_ids": [],
+  "fact_sheet_sha256": "a2bac36d6e4adc2bfb7f54b5809705d246601d5f745ea73f92e8b57a2fc719a1",
+  "prompt_sha256": {
+    "gemma3": "71b1e1a81c4bf29862f6d486a2390cc42351ad718c41c4e4fc312d1338b56ae4",
+    "gemma4": "6dc19ebcf882bc7007405535d9c709a722183ac8cf8b2ddc1daf8de2e8bd540e"
+  }
+}

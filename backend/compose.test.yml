@@ -1,0 +1,13 @@
+# A throwaway Postgres for the test suite only. Port 55432 so it cannot collide
+# with a real local Postgres on 5432, and tmpfs so a failed run leaves nothing
+# behind to confuse the next one.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: lucytest
+      POSTGRES_DB: lucytest
+    ports:
+      - "55432:5432"
+    tmpfs:
+      - /var/lib/postgresql/data

@@ -1,0 +1,57 @@
+{
+  "id": "hurt",
+  "question": "what happens if someone gets hurt at camp",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "happens",
+    "if",
+    "someone",
+    "gets",
+    "hurt",
+    "camp"
+  ],
+  "camp_ids": [
+    598,
+    548,
+    1079,
+    1240,
+    980
+  ],
+  "doc_ids": [
+    78,
+    173
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 129,
+      "fact_ids": [
+        773,
+        775,
+        782
+      ]
+    },
+    {
+      "entity_id": 18,
+      "fact_ids": [
+        567
+      ]
+    },
+    {
+      "entity_id": 235,
+      "fact_ids": [
+        938,
+        939,
+        941,
+        947,
+        948
+      ]
+    }
+  ],
+  "people_sha256": "a3efbebe6abfd830ca94e166a8d15051aafdff4b437d98d86a483236f7631b5f",
+  "general_ids": [],
+  "fact_sheet_sha256": "89a2734da2991f89c245d87255a91caf4eb8ec68c6c57ce79149495c3636cde0",
+  "prompt_sha256": {
+    "gemma3": "9fc3be59a6d34b63e0da01e48a86b0f5b686673c96aa6786780171c3bff351d7",
+    "gemma4": "edd228785c4065bda493981c528300f02af6a28c8fdb3cb28acc4363027e2098"
+  }
+}

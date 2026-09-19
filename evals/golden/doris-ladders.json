@@ -1,0 +1,49 @@
+{
+  "id": "doris-ladders",
+  "question": "are there ladders in Doris",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "ladders",
+    "doris"
+  ],
+  "camp_ids": [
+    574,
+    575,
+    576,
+    578,
+    599
+  ],
+  "doc_ids": [
+    78,
+    173
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 7,
+      "fact_ids": [
+        517,
+        520
+      ]
+    },
+    {
+      "entity_id": 6,
+      "fact_ids": [
+        506,
+        510
+      ]
+    },
+    {
+      "entity_id": 10,
+      "fact_ids": [
+        546
+      ]
+    }
+  ],
+  "people_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "general_ids": [],
+  "fact_sheet_sha256": "e33e2bab2d1eae0ffe7ccf27e741b6e170865ee226e3ac4d046b337bdfc17c40",
+  "prompt_sha256": {
+    "gemma3": "b3c5d487bb32714dcb45bf26fd172910a0f22e5fe0881221f154680483cb6ddf",
+    "gemma4": "136359d9a2f15fb4869699f4de598675ca81a004d2b0bd6d4c5940bb77282db8"
+  }
+}

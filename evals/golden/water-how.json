@@ -1,0 +1,34 @@
+{
+  "id": "water-how",
+  "question": "how do we get water",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "water"
+  ],
+  "camp_ids": [
+    585,
+    670,
+    691,
+    692,
+    693
+  ],
+  "doc_ids": [
+    78,
+    162
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 7,
+      "fact_ids": [
+        525
+      ]
+    }
+  ],
+  "people_sha256": "1d9feb140c85639adb444192461a7cf93abe1ae6c39065529c80bf0713209e8d",
+  "general_ids": [],
+  "fact_sheet_sha256": "1785169b8e23eedce271dec1a4d34e75de7970704149806e4b536562bfd1d76f",
+  "prompt_sha256": {
+    "gemma3": "558b52716d47a554e9af47ef0b56d79f4e50fa65aa6fc20187c0d6e5e1e00f48",
+    "gemma4": "ef1ba36c79b24e956cbe77bb5da363ccaf074562b69cc6f0e54b1d3975c36a5e"
+  }
+}

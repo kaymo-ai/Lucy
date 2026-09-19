@@ -1,0 +1,47 @@
+{
+  "id": "followup-thin",
+  "question": "where is it stored",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "stored",
+    "generator"
+  ],
+  "camp_ids": [
+    1228,
+    1240,
+    589,
+    601,
+    625
+  ],
+  "doc_ids": [
+    78,
+    3
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 7,
+      "fact_ids": [
+        520
+      ]
+    },
+    {
+      "entity_id": 24,
+      "fact_ids": [
+        590
+      ]
+    },
+    {
+      "entity_id": 219,
+      "fact_ids": [
+        925
+      ]
+    }
+  ],
+  "people_sha256": "7417f8d9ace3707763b49369bb0eab7f44464233736f02ed69cd8e4ed071263a",
+  "general_ids": [],
+  "fact_sheet_sha256": "edb17cd3cff19bdbbe3e03b49422199c579eab788703639a8e702266c9341956",
+  "prompt_sha256": {
+    "gemma3": "b4d9da062473fdef0df0cecd18e80974d9fe400d05adc1dff2d975d31dc2ba11",
+    "gemma4": "7dc7670aa39cf98475c685681945f9cdbbe855db0639ef9a0691049008b997ee"
+  }
+}

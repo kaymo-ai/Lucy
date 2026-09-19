@@ -1,0 +1,56 @@
+{
+  "id": "unknown-wifi",
+  "question": "what's the wifi password at camp",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "wifi",
+    "password",
+    "camp"
+  ],
+  "camp_ids": [
+    1240,
+    577,
+    580,
+    586,
+    594
+  ],
+  "doc_ids": [
+    78,
+    173
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 235,
+      "fact_ids": [
+        938,
+        939,
+        941,
+        947,
+        948
+      ]
+    },
+    {
+      "entity_id": 1,
+      "fact_ids": [
+        492,
+        493,
+        491
+      ]
+    },
+    {
+      "entity_id": 7,
+      "fact_ids": [
+        531,
+        535,
+        536
+      ]
+    }
+  ],
+  "people_sha256": "a3efbebe6abfd830ca94e166a8d15051aafdff4b437d98d86a483236f7631b5f",
+  "general_ids": [],
+  "fact_sheet_sha256": "aea21cc152b7a722ca64e3bafd3b1bfce2361fa7a66336a938399f034c13e98e",
+  "prompt_sha256": {
+    "gemma3": "280b613e9bae4ddc3552ae74d3839288c61e1ed0c8a05c4eb2cb50960899acab",
+    "gemma4": "ea4f93ed252f23fcfa76b7d3936c6dbf2573995c925246c612f3a806ec3933c4"
+  }
+}

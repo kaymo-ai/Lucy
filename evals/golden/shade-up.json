@@ -1,0 +1,50 @@
+{
+  "id": "shade-up",
+  "question": "how do the shade structures go up",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "shade",
+    "structures",
+    "go"
+  ],
+  "camp_ids": [
+    1222,
+    66,
+    602,
+    603,
+    617
+  ],
+  "doc_ids": [
+    78,
+    173
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 24,
+      "fact_ids": [
+        584,
+        585,
+        592,
+        591
+      ]
+    },
+    {
+      "entity_id": 29,
+      "fact_ids": []
+    },
+    {
+      "entity_id": 231,
+      "fact_ids": [
+        935,
+        934
+      ]
+    }
+  ],
+  "people_sha256": "ecbe9c3e2a29fbef4e5bfde82cf5bd6e580f79a12ceda1bb91ee5895269782ab",
+  "general_ids": [],
+  "fact_sheet_sha256": "54ab58b80aaf68797df19fc1d15d18eaed037b50b762fead1ec6d3e4d60b9e17",
+  "prompt_sha256": {
+    "gemma3": "5505ba41b3308afb50516cfc38c84c0552a0e95bd809f8d7c91ea9311abfa9b9",
+    "gemma4": "b9587fdde48473c7af02f80aa7779896d0082549751d393a53fe733ce839522c"
+  }
+}

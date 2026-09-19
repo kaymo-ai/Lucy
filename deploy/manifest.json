@@ -1,0 +1,14 @@
+{
+  "model": {
+    "file": "gemma-4-E2B-it-Q4_K_M.gguf",
+    "url": "https://storage.googleapis.com/lucy-snails-releases/models/gemma-4-E2B-it-Q4_K_M.gguf",
+    "bytes": 3106738272,
+    "sha256": "740185b21d22ceb83a11c3aa62ad5842ef32c70f6096d756bbee85a1e4ec34b8"
+  },
+  "small": {
+    "file": "gemma-3-1b-it-Q4_K_M.gguf",
+    "url": "https://storage.googleapis.com/lucy-snails-releases/models/gemma-3-1b-it-Q4_K_M.gguf",
+    "bytes": 806058240,
+    "sha256": "8ccc5cd1f1b3602548715ae25a66ed73fd5dc68a210412eea643eb20eb75a135"
+  }
+}

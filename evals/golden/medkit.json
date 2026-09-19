@@ -1,0 +1,18 @@
+{
+  "id": "medkit",
+  "question": "do we have a medkit",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "medkit"
+  ],
+  "camp_ids": [],
+  "doc_ids": [],
+  "entity_hits": [],
+  "people_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "general_ids": [],
+  "fact_sheet_sha256": "b4f219ef2be0443ec3bd4f90e2f27f0faba5cc8d506d51d05fc84363bb63adab",
+  "prompt_sha256": {
+    "gemma3": "2ab42c24a0b40c1f5391f09537cd41f5a846013c36795dfa83fa42ee0f3d8f38",
+    "gemma4": "6419871c12691c84e9a379205c212ab5de3c4b3470f75b0f69e3df47a83c312e"
+  }
+}

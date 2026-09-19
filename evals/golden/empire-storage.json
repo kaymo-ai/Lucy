@@ -1,0 +1,52 @@
+{
+  "id": "empire-storage",
+  "question": "how do I get into Empire storage",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "into",
+    "empire",
+    "storage"
+  ],
+  "camp_ids": [
+    578,
+    676,
+    937,
+    966,
+    1033
+  ],
+  "doc_ids": [
+    78,
+    173
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 158,
+      "fact_ids": [
+        817,
+        815,
+        816,
+        814
+      ]
+    },
+    {
+      "entity_id": 99,
+      "fact_ids": [
+        736,
+        731
+      ]
+    },
+    {
+      "entity_id": 6,
+      "fact_ids": [
+        510
+      ]
+    }
+  ],
+  "people_sha256": "0dab134e1abd957ff8c4d3b8c81c4e65055455b1e99ae6dbeb5823763f53e4fc",
+  "general_ids": [],
+  "fact_sheet_sha256": "fd58cc5b452feb3770fb70ead24282e314507ac27a4da010e840a4ff48c5654d",
+  "prompt_sha256": {
+    "gemma3": "fde0e45e0943c85a0e0d426a9102a80a3bb1547e64b39c8b0d860b38a69009ae",
+    "gemma4": "56564a9d8bfe139bc889a628e82ca5283f67550557a6a7e6a3651b3981aa94a5"
+  }
+}

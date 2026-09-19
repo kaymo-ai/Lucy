@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lucy - Help us preserve Preservation Society</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Preservation Society">
+<meta property="og:title" content="Lucy - Help us preserve Preservation Society">
+<meta property="og:description" content="Let's remember things together, so every year is better than the last. Ten years of us, living in your pocket and still answering out there in the dust, where nothing else does.">
+<meta property="og:url" content="https://lucy.marcusfoster.com/">
+<meta property="og:image" content="https://lucy.marcusfoster.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Lucy app. Help us preserve Preservation Society">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#16181C">
+<style>
+  :root{
+    --ground:#16181C;
+    --raised:#22262C;
+    --text:#ECEDE9;
+    --muted:#8B9199;
+    --accent:#F04A1E;
+    --hairline:rgba(236,237,233,0.18);
+    --display:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    min-height:100svh;
+    background:var(--ground);
+    color:var(--text);
+    font-family:var(--display);
+    font-weight:450;
+    font-size:17px;
+    line-height:1.55;
+    padding:0 22px 60px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .wrap{max-width:420px;width:100%}
+  .mark{display:flex;align-items:center;gap:11px;margin-bottom:30px}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);flex:none}
+  .mark span{
+    font-weight:900;font-stretch:condensed;
+    font-size:19px;letter-spacing:0.17em;color:var(--accent);
+  }
+  h1{
+    font-weight:900;font-stretch:condensed;letter-spacing:-0.02em;
+    font-size:clamp(38px,11vw,54px);text-transform:uppercase;
+    line-height:1.04;margin:0 0 16px;
+  }
+  p{margin:0 0 22px;color:var(--muted)}
+  form{display:flex;flex-direction:column;gap:12px}
+  input{
+    width:100%;
+    background:var(--raised);
+    border:1px solid var(--hairline);
+    border-radius:12px;
+    color:var(--text);
+    font-family:inherit;
+    font-size:17px;
+    padding:15px 16px;
+  }
+  input:focus{outline:2px solid var(--accent);outline-offset:1px}
+  input::placeholder{color:var(--muted)}
+  button{
+    background:var(--accent);
+    color:#fff;
+    border:0;
+    border-radius:12px;
+    font-family:inherit;
+    font-weight:800;
+    font-stretch:condensed;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    font-size:17px;
+    padding:15px 16px;
+    cursor:pointer;
+  }
+  .wrong{
+    color:var(--accent);
+    font-size:15px;
+    margin:0 0 18px;
+  }
+  .foot{
+    margin-top:30px;
+    font-size:14px;
+    color:var(--muted);
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="mark"><span class="dot"></span><span>LUCY</span></div>
+    <h1>Camp only</h1>
+    <p>This page is for members of the camp. Enter the codeword from the camp
+    thread.</p>
+
+    <!-- Shown when the last attempt was wrong. The server redirects here with
+         ?wrong=1 and never echoes back what was typed. No script: the :target
+         trick is unnecessary because the server decides what to render. -->
+    <p class="wrong" id="wrong" hidden>That is not the codeword.</p>
+
+    <form method="post" action="/v1/site-unlock">
+      <input type="text" name="code" placeholder="Codeword"
+             autocomplete="off" autocapitalize="none" autocorrect="off"
+             spellcheck="false" required autofocus>
+      <button type="submit">Let me in</button>
+    </form>
+
+    <p class="foot">If you do not have it, ask in the camp thread.</p>
+  </div>
+  <script>
+    // The only script on either page, and it does nothing security-relevant:
+    // it reveals a line of text when the server bounced you back here. The
+    // actual check happens on the server, and this file is all a browser ever
+    // gets until it passes.
+    if (new URLSearchParams(location.search).has('wrong')) {
+      document.getElementById('wrong').hidden = false;
+    }
+  </script>
+</body>
+</html>

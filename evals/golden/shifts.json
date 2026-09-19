@@ -1,0 +1,56 @@
+{
+  "id": "shifts",
+  "question": "how do camp shifts work",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "camp",
+    "shifts",
+    "work"
+  ],
+  "camp_ids": [
+    831,
+    1089,
+    494,
+    969,
+    976
+  ],
+  "doc_ids": [
+    162,
+    78
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 235,
+      "fact_ids": [
+        938,
+        939,
+        941,
+        947,
+        948
+      ]
+    },
+    {
+      "entity_id": 1,
+      "fact_ids": [
+        492,
+        493,
+        491
+      ]
+    },
+    {
+      "entity_id": 7,
+      "fact_ids": [
+        531,
+        535,
+        536
+      ]
+    }
+  ],
+  "people_sha256": "a3efbebe6abfd830ca94e166a8d15051aafdff4b437d98d86a483236f7631b5f",
+  "general_ids": [],
+  "fact_sheet_sha256": "7c31fadb2617e0ff23ea9147aefa111a230cf160e1ca031322f0102681f8e243",
+  "prompt_sha256": {
+    "gemma3": "aca209fa1076af54cff3d5661ce9bfb2a8a9a4dd29c8d13dadc05689e7774ecf",
+    "gemma4": "43b874915e2b8fc49fbc2becc875549cd4e3a4d8726939c174eb1ffb448645de"
+  }
+}

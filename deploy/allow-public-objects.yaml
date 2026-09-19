@@ -1,0 +1,28 @@
+# Lets gs://lucy-snails-releases serve the model over plain HTTPS.
+#
+# kaymo.ai sets constraints/iam.allowedPolicyMemberDomains at the organisation,
+# permitting only members of customer C04hicavr. `allUsers` is in no domain, so
+# granting public read returns HTTP 412 and no bucket in the org can be read
+# anonymously. That is a sensible default and the wrong one for a bucket whose
+# entire job is to hand a 2.89 GB file to phones that have no Google account.
+#
+# This overrides the constraint for the lucy-snails PROJECT only. The rest of
+# the organisation keeps the restriction. Scope it no wider: the project holds
+# one bucket, and that bucket holds stock Gemma with no camp data in it -- the
+# enrichment database ships inside the IPA, never from here.
+#
+#   gcloud resource-manager org-policies set-policy \
+#       deploy/allow-public-objects.yaml --project=lucy-snails
+#
+# Then the grant that failed will succeed:
+#
+#   gcloud storage buckets add-iam-policy-binding gs://lucy-snails-releases \
+#       --member=allUsers --role=roles/storage.objectViewer
+#
+# To undo, and put the project back under the organisation's rule:
+#
+#   gcloud resource-manager org-policies delete \
+#       constraints/iam.allowedPolicyMemberDomains --project=lucy-snails
+constraint: constraints/iam.allowedPolicyMemberDomains
+listPolicy:
+  allValues: ALLOW

@@ -1,0 +1,49 @@
+{
+  "id": "boris-what",
+  "question": "what is Boris",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "boris"
+  ],
+  "camp_ids": [
+    574,
+    575,
+    577,
+    675,
+    677
+  ],
+  "doc_ids": [
+    78,
+    173
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 6,
+      "fact_ids": [
+        513,
+        508,
+        514,
+        507
+      ]
+    },
+    {
+      "entity_id": 10,
+      "fact_ids": [
+        549
+      ]
+    },
+    {
+      "entity_id": 235,
+      "fact_ids": [
+        941
+      ]
+    }
+  ],
+  "people_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "general_ids": [],
+  "fact_sheet_sha256": "526cee8e565b3e5c23e3f14ce88c8cd28eae3a5317b46a592bdcb8f829a9502d",
+  "prompt_sha256": {
+    "gemma3": "b10fb53818a204bba90e878f54d0fba0a362ec92cfa500ef6cde6028122d712b",
+    "gemma4": "0cdbd928becea8fa7ee6b1a2396523c73945f5b8a18ec1d66b830c1da3cfd912"
+  }
+}

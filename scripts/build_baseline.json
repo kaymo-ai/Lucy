@@ -1,0 +1,24 @@
+{
+  "counts": {
+    "ask_word": 4303,
+    "camp_fact": 1197,
+    "camp_knowledge": 145,
+    "camp_member": 291,
+    "claim_embedding": 1926,
+    "entity": 138,
+    "entity_alias": 254,
+    "entity_fact": 546,
+    "evidence": 7846,
+    "expertise": 308,
+    "general_knowledge": 16,
+    "lore": 183,
+    "person": 139,
+    "person_alias": 583,
+    "person_content": 2691,
+    "person_profile": 124,
+    "personality": 108,
+    "relationship": 1394,
+    "shift_grid": 85
+  },
+  "source": "scripts/output/enriched_preview.db"
+}

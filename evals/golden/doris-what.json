@@ -1,0 +1,49 @@
+{
+  "id": "doris-what",
+  "question": "what is Doris",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "doris"
+  ],
+  "camp_ids": [
+    574,
+    575,
+    576,
+    578,
+    599
+  ],
+  "doc_ids": [
+    78,
+    173
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 7,
+      "fact_ids": [
+        536,
+        535,
+        534,
+        533
+      ]
+    },
+    {
+      "entity_id": 6,
+      "fact_ids": [
+        510
+      ]
+    },
+    {
+      "entity_id": 19,
+      "fact_ids": [
+        569
+      ]
+    }
+  ],
+  "people_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "general_ids": [],
+  "fact_sheet_sha256": "615ad8131a8da85b9122ba45c89e217aec098deaad454a950f1c3c863649ab74",
+  "prompt_sha256": {
+    "gemma3": "d1092f25a1e4edb838e9ea5825aee0860e2e48886dc23255ffefe6e484235363",
+    "gemma4": "2e0d8a7a2b64a4c492d41b5a751ed3f8d65f86af58e137f21d538fd737631dbf"
+  }
+}

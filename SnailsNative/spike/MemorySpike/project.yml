@@ -1,0 +1,62 @@
+name: MemorySpike
+
+# Throwaway spike. Answers one question: does Gemma 4 E2B (3.11 GB) plus the
+# vision projector (986 MB) stay resident on an 8 GB iPhone without jetsam?
+# Regenerate the Xcode project with:  xcodegen generate
+# (run from this directory; the .xcodeproj is a build artifact, not committed)
+
+options:
+  bundleIdPrefix: ai.kaymo.spike
+  deploymentTarget:
+    iOS: "16.4"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    SWIFT_STRICT_CONCURRENCY: minimal
+    DEVELOPMENT_TEAM: 78J6KTETAK
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+
+targets:
+  MemorySpike:
+    type: application
+    platform: iOS
+    sources:
+      - path: MemorySpike
+        excludes:
+          - "Info.plist"
+          - "MemorySpike.entitlements"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ai.kaymo.spike.MemorySpike
+        # llama.h/mtmd.h are C, but the framework links libc++; ObjC++ interop
+        # keeps the Swift importer happy about the C++ standard library.
+        SWIFT_OBJC_INTEROP_MODE: objcxx
+        TARGETED_DEVICE_FAMILY: "1"
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+    info:
+      path: MemorySpike/Info.plist
+      properties:
+        # Both keys are required so the 3.11 GB gguf can be dragged into the
+        # app's Documents via Finder, and so devicectl can push it there.
+        # They must exist in the FIRST build installed on the device --
+        # adding them later forces a reinstall.
+        UIFileSharingEnabled: true
+        LSSupportsOpeningDocumentsInPlace: true
+        UILaunchScreen: {}
+        UIRequiredDeviceCapabilities: [arm64]
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+    entitlements:
+      path: MemorySpike/MemorySpike.entitlements
+      properties:
+        com.apple.developer.kernel.increased-memory-limit: true
+    dependencies:
+      # NOTE: llama.xcframework at b10333 builds llama.framework as a DYNAMIC
+      # library (verified: `file ios-arm64/llama.framework/llama` reports
+      # "dynamically linked shared library"). It must be embedded and signed --
+      # "Do Not Embed" produces a dyld crash at launch.
+      - framework: ../../vendor/llama.xcframework
+        embed: true
+        codeSign: true

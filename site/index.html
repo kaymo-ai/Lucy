@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lucy - Help us preserve Preservation Society</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Preservation Society">
+<meta property="og:title" content="Lucy - Help us preserve Preservation Society">
+<meta property="og:description" content="Let's remember things together, so every year is better than the last. Ten years of us, living in your pocket and still answering out there in the dust, where nothing else does.">
+<meta property="og:url" content="https://lucy.marcusfoster.com/">
+<meta property="og:image" content="https://lucy.marcusfoster.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Lucy app. Help us preserve Preservation Society">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#16181C">
+<style>
+  :root{
+    --ground:#16181C;
+    --raised:#22262C;
+    --text:#ECEDE9;
+    --muted:#8B9199;
+    --accent:#F04A1E;
+    --keep:#3E8B9C;
+    --hairline:rgba(236,237,233,0.18);
+    --radius:14px;
+    --radius-sm:5px;
+    --display:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--text);
+    font-family:var(--display);
+    font-weight:450;
+    font-size:17px;
+    line-height:1.55;
+    padding:0 22px 90px;
+  }
+  /* Wider than the old 720 so a section can hold readable copy beside a
+     phone without squeezing either. Prose that has no phone next to it is
+     held to a line length you can actually read, rather than running the
+     full width. */
+  .wrap{max-width:940px;margin:0 auto}
+  section > p, section > .card, section > .note, section > .todo,
+  section > ol, section > dl, .lede{max-width:36em}
+
+  /* ---- type ---- */
+  h1,h2,h3{
+    font-weight:900;font-stretch:condensed;letter-spacing:-0.02em;
+    margin:0;line-height:1.04;
+    /* The headings used to carry hard <br>s, which looked right in exactly
+       one window and wrong in every other. balance lets the browser even the
+       lines out at whatever width it actually has. */
+    text-wrap:balance;
+  }
+  h1{font-size:clamp(46px,13vw,76px);text-transform:uppercase}
+  /* "Preserving" steps back so the camp's name carries the line. Muted is
+     already in the palette and is plenty legible at 76px. */
+  h1 .dim{color:var(--muted)}
+  h2{font-size:clamp(28px,7vw,38px);text-transform:uppercase;margin-bottom:14px}
+  h3{font-size:20px;text-transform:uppercase;letter-spacing:0;margin-bottom:6px}
+  p{margin:0 0 15px}
+  a{color:var(--accent)}
+  /* strong sets its own colour, and nested inside a link it wins, which made
+     the sign-up link render as ordinary bold text. */
+  a strong{color:inherit}
+  strong{font-weight:700;color:var(--text)}
+
+  .cta{
+    display:inline-block;background:var(--accent);color:#fff;
+    font-weight:800;font-stretch:condensed;text-transform:uppercase;
+    letter-spacing:0.06em;font-size:18px;
+    padding:16px 26px;border-radius:var(--radius);
+    text-decoration:none;margin:4px 0 22px;
+  }
+
+  .eyebrow{
+    font-size:11px;font-weight:800;text-transform:uppercase;
+    letter-spacing:0.16em;color:var(--muted);
+    font-stretch:condensed;
+    margin:0 0 10px;
+  }
+  .mono{font-family:var(--mono);font-size:13px}
+  .muted{color:var(--muted)}
+
+  /* ---- masthead ---- */
+  header{padding:56px 0 10px}
+  .mark{display:flex;align-items:center;gap:11px;margin-bottom:26px}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);flex:none}
+  .mark span{
+    font-family:var(--display);font-weight:900;font-stretch:condensed;
+    font-size:19px;letter-spacing:0.17em;color:var(--accent);
+  }
+  .lede{font-size:20px;color:var(--muted);margin-top:20px;max-width:34em}
+
+  /* ---- sections ---- */
+  section{padding:44px 0;border-top:1px solid var(--hairline)}
+  section:first-of-type{border-top:none}
+
+  /* ---- screenshots ---- */
+  .shot{margin:0}
+  .shot{max-width:100%}
+  /* A phone screenshot is 1206x2622, so at 300px wide it stands 650px tall
+     while the copy beside it is half that. The rest was empty ground. */
+  .shot img{
+    display:block;width:100%;height:auto;
+    max-height:480px;object-fit:contain;object-position:top;
+    border-radius:var(--radius);border:1px solid var(--hairline);
+    background:var(--raised);
+  }
+  /* The People card is far taller than its copy; showing the top of it keeps the
+     two columns from drifting a screen apart. */
+  .shot.tall img{max-height:480px;object-fit:cover;object-position:top}
+  .shot figcaption{
+    font-family:var(--mono);font-size:12px;color:var(--muted);
+    margin-top:10px;line-height:1.45;
+  }
+  /* The copy needs ~340px before it starts reading badly, and the phone
+     needs ~230px before it stops being legible. Below their sum plus the gap
+     the two stack, rather than both being squeezed to fit side by side. */
+  .split{display:flex;flex-wrap:wrap;gap:34px;align-items:center}
+  .split .copy{flex:1 1 340px;min-width:0}
+  .split .shot{flex:1 1 190px;max-width:222px;margin:0 auto}
+  /* Alternate which side the phone sits on. Five sections in a row all
+     built the same way read as one long column. Below the wrap point both
+     orders collapse to copy-then-image, which is the right reading order. */
+  .split.flip{flex-direction:row-reverse}
+  @media (max-width:719px){
+    .split, .split.flip{flex-direction:column}
+    .split .shot{margin:0;max-width:240px}
+  }
+
+  /* ---- steps ---- */
+  ol.steps{list-style:none;margin:0 0 20px;padding:0;counter-reset:s}
+  ol.steps li{
+    counter-increment:s;position:relative;
+    padding:0 0 0 42px;margin-bottom:16px;
+  }
+  ol.steps li::before{
+    content:counter(s);
+    position:absolute;left:0;top:1px;
+    width:27px;height:27px;border-radius:var(--radius-sm);
+    background:var(--raised);color:var(--accent);
+    font-family:var(--mono);font-size:13px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* ---- callouts ---- */
+  .note{
+    border-left:3px solid var(--accent);
+    padding:2px 0 2px 16px;margin:22px 0;
+  }
+  .note p{margin:0;color:var(--muted)}
+  .note p strong{color:var(--text)}
+
+  .card{
+    background:var(--raised);border-radius:var(--radius);
+    padding:20px 22px;margin:20px 0;
+  }
+  .card h3{margin-bottom:8px}
+  .card p:last-child{margin-bottom:0}
+
+  /* ---- outcomes list ---- */
+  dl.rules{margin:18px 0 0}
+  dl.rules dt{
+    font-family:var(--mono);font-size:13px;color:var(--accent);
+    margin-top:16px;
+  }
+  dl.rules dd{margin:3px 0 0;color:var(--muted)}
+  dl.rules dd strong{color:var(--text)}
+
+  ul.plain{margin:0 0 16px;padding-left:20px}
+  ul.plain li{margin-bottom:9px}
+
+  .now-later{display:flex;flex-wrap:wrap;gap:18px;margin-top:8px}
+  .now-later > div{flex:1 1 260px;background:var(--raised);border-radius:var(--radius);padding:20px 22px}
+  .now-later h3{color:var(--text)}
+  .now-later .tag{
+    font-family:var(--mono);font-size:11px;text-transform:uppercase;
+    letter-spacing:0.1em;padding:3px 8px;border-radius:var(--radius-sm);
+    display:inline-block;margin-bottom:10px;
+  }
+  .tag.today{background:var(--keep);color:var(--ground)}
+  .tag.later{background:transparent;color:var(--muted);border:1px solid var(--hairline)}
+  .now-later p:last-child{margin-bottom:0}
+
+  footer{
+    border-top:1px solid var(--hairline);padding:30px 0 0;margin-top:44px;
+    font-family:var(--mono);font-size:12px;color:var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="mark"><span class="dot"></span><span>THE LUCY APP</span></div>
+  <h1><span class="dim">Preserving</span> Preservation Society</h1>
+  <p class="lede">Let's remember things together, so every year is better than
+  the last. Ten years of us, living in your pocket and still answering out
+  there in the dust, where nothing else does.</p>
+  <a class="cta" href="https://example.invalid/get-the-app">Get the Lucy app</a>
+
+</header>
+
+<section>
+  <div class="split">
+    <div class="copy">
+      <h2>Lucy helps you</h2>
+      <p>Where does the greywater go? Who's got the Empire storage key? Every
+      answer comes from something one of us actually wrote.</p>
+      <p>Type it, or hold the orange mic and talk, because your hands are
+      probably full.</p>
+    </div>
+    <figure class="shot">
+      <img src="screens/app.jpg" alt="The Lucy tab, mid-conversation: a question about a phone number, answered, and a question about an Oz-hole, answered at length">
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="split flip">
+    <div class="copy">
+      <h2>Everyone you love</h2>
+      <p>All of us, with this year's lot at the top. Search a name, or search
+      for what somebody's brilliant at: "generators", "food", "bikes".</p>
+      <p>Forgotten who's on your shift with you? Nobody has to know.</p>
+    </div>
+    <figure class="shot tall">
+      <img src="screens/people.jpg" alt="The Snails tab: everyone here this year, each with what they are known for">
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="split">
+    <div class="copy">
+      <h2>You help Lucy</h2>
+      <p>The spare regulator's in the blue tub behind Doris. This valve is the
+      one that leaks. Next year, twice the shade.</p>
+      <p>Take a photo of it, or hold the button and say it out loud. This is
+      the bit only you can do.</p>
+      <p><strong>Whatever we notice this year is what we all know next
+      year.</strong></p>
+    </div>
+    <figure class="shot">
+      <img src="screens/note.jpg" alt="The Memory tab: a viewfinder, a photo button and a hold-to-talk button">
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="split flip">
+    <div class="copy">
+      <h2>And we all get better</h2>
+      <p>Hit <strong>Sync</strong> and your notes go to the camp with no name
+      on them, so the next person doesn't learn it the hard way like you
+      did.</p>
+      <p>Nothing leaves your phone until you press it, and what you
+      <em>ask</em> stays yours.</p>
+    </div>
+    <figure class="shot">
+      <img src="screens/sync.png" alt="The Sync screen: what it does, and one Sync button">
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="split">
+    <div class="copy">
+      <h2>Building the place</h2>
+      <p>Four days in the dust before anyone else arrives. Every step in
+      order, with photos of how each piece actually goes together.</p>
+      <p>Including this year's camp plan, so you know where the shade, the
+      vans and the fire lane go before you put one down.</p>
+    </div>
+    <figure class="shot">
+      <img src="screens/build.png" alt="The build guide open at the poles colour key, with the 2026 camp layout plan below it">
+    </figure>
+  </div>
+</section>
+
+<section>
+  <div class="split flip">
+    <div class="copy">
+      <h2>The boring bit</h2>
+      <p>The manual, the build guide and this year's schedule, to read
+      yourself when a sentence isn't what you want. Plus which version you're
+      running, for when it tells you something ridiculous.</p>
+    </div>
+    <figure class="shot">
+      <img src="screens/info.jpg" alt="The Info tab: the manual, the build guide and the schedule, and what this install is">
+    </figure>
+  </div>
+</section>
+
+<section>
+  <h2>One favour, before you go</h2>
+  <p>Please do this bit at home. We will be so grateful.</p>
+
+  <div class="card">
+    <h3>Download its brain on wifi</h3>
+    <p><strong>3.11 GB</strong>, one time only, and then it's yours forever. It
+    won't touch your data plan, and out there in the dust you'll have nothing
+    to download it with anyway. The Gerlach parking lot is a heartbreaking
+    place to discover this.</p>
+  </div>
+
+  <div class="note">
+    <p><strong>iPhone only</strong> for now, sorry. A newer one gets the full
+    brain. An older one gets a smaller brain, and says so. A really old one
+    tells you straight away that it can't, rather than let you find out after
+    twenty minutes.</p>
+  </div>
+</section>
+
+<section>
+  <h2>It'll get things wrong</h2>
+  <p>Of course it will. There's no tech support and nobody on call, so you'll
+  figure it out like we figure out everything else. When it says something
+  daft, shout about it in the thread.</p>
+  <p>And trust people over the app, always. Please don't dig a hole at 2am
+  because an app told you to.</p>
+  <p>Thanks for trying it. See you in the dust.</p>
+
+  <a class="cta" href="https://example.invalid/get-the-app">Get the Lucy app</a>
+</section>
+
+<footer>
+  Lucy, made for Preservation Society, by us, out of us.
+</footer>
+
+</div>
+</body>
+</html>

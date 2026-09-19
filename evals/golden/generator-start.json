@@ -1,0 +1,28 @@
+{
+  "id": "generator-start",
+  "question": "how do I start the generator",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "start",
+    "generator"
+  ],
+  "camp_ids": [
+    1228,
+    1240,
+    589,
+    605,
+    645
+  ],
+  "doc_ids": [
+    78,
+    3
+  ],
+  "entity_hits": [],
+  "people_sha256": "d40182ae447f7a0d0dcde385eccba91b703b2f70b2d8412102ae87fa75835fa9",
+  "general_ids": [],
+  "fact_sheet_sha256": "e0bc4b0cad18bfe82e92888f773c90a810079744be189239b3c6908569ff83ee",
+  "prompt_sha256": {
+    "gemma3": "04dbd732420331c7b623dbc5410d0384003c4ffeed35ae14a9b7d4cb8fd3f8cf",
+    "gemma4": "48c82fc821957009df91605303e8161a14b19a821269269040aebf7575200e05"
+  }
+}

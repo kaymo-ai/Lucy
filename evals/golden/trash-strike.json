@@ -1,0 +1,59 @@
+{
+  "id": "trash-strike",
+  "question": "where do we dump trash during strike",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "dump",
+    "trash",
+    "during",
+    "strike"
+  ],
+  "camp_ids": [
+    576,
+    578,
+    613,
+    768,
+    1253
+  ],
+  "doc_ids": [
+    78,
+    173
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 70,
+      "fact_ids": [
+        670,
+        669,
+        668,
+        667
+      ]
+    },
+    {
+      "entity_id": 210,
+      "fact_ids": [
+        891,
+        895,
+        896,
+        897,
+        899
+      ]
+    },
+    {
+      "entity_id": 6,
+      "fact_ids": [
+        504,
+        505,
+        507,
+        514
+      ]
+    }
+  ],
+  "people_sha256": "adeda611819efdc8a6e3924ebe2facddb04a9112a76a23755ec9cb098bd8ce78",
+  "general_ids": [],
+  "fact_sheet_sha256": "9617374c9a5c92988badc78e452c514f669ddf4a232aa635d4631ab30912343c",
+  "prompt_sha256": {
+    "gemma3": "b31da68205a4e94210c32f618171bb64a147c7ab8c25fb9299a8b45ebde6dbb6",
+    "gemma4": "25eb8bdf7f3c0d48193552ca76c1821bd1a895a50a333157eda350f31912ab9b"
+  }
+}

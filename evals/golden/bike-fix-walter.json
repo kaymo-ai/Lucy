@@ -1,0 +1,42 @@
+{
+  "id": "bike-fix-walter",
+  "question": "who knows how to fix a bike",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "knows",
+    "fix",
+    "bike"
+  ],
+  "camp_ids": [
+    641,
+    687,
+    1054,
+    1072,
+    1192
+  ],
+  "doc_ids": [
+    162,
+    78
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 235,
+      "fact_ids": [
+        941
+      ]
+    },
+    {
+      "entity_id": 149,
+      "fact_ids": [
+        806
+      ]
+    }
+  ],
+  "people_sha256": "af199ad6278073d47ee03cb9601eae19a64f294ff042ec8ca1569ab5210ee2de",
+  "general_ids": [],
+  "fact_sheet_sha256": "f1bfc97c81d14daf9f90ebf5f4be8d6b6ea78641ebaebbba9883474147230038",
+  "prompt_sha256": {
+    "gemma3": "61f515931d82eb9a9f139bedc1f7f74ab69e2f51d928702a437c0f7a5ef5986b",
+    "gemma4": "ffd258f088a85f210f33bf419d74971a9529e45aef86624cf6499fb1eff23f28"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "water-delivered",
+  "question": "when is the water delivered",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "water",
+    "delivered"
+  ],
+  "camp_ids": [
+    585,
+    670,
+    691,
+    692,
+    693
+  ],
+  "doc_ids": [
+    78,
+    173
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 7,
+      "fact_ids": [
+        525
+      ]
+    },
+    {
+      "entity_id": 24,
+      "fact_ids": [
+        585
+      ]
+    }
+  ],
+  "people_sha256": "1d9feb140c85639adb444192461a7cf93abe1ae6c39065529c80bf0713209e8d",
+  "general_ids": [],
+  "fact_sheet_sha256": "62302baa002be4ce984f0a1305886f893d011bfed99db45cab88924cdb1f2fb7",
+  "prompt_sha256": {
+    "gemma3": "4d5f1a8fdd9e9aa406008007fbf382e5def294051bf0c7fea89372da4e448a2e",
+    "gemma4": "5dfb09ab1eebc98fb8319d3d34d53d7a896434f29e3cee84943f428ff4ae8fd2"
+  }
+}

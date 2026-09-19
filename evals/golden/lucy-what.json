@@ -1,0 +1,52 @@
+{
+  "id": "lucy-what",
+  "question": "what is Lucy",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "lucy"
+  ],
+  "camp_ids": [
+    575,
+    577,
+    579,
+    581,
+    582
+  ],
+  "doc_ids": [
+    78,
+    160
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 10,
+      "fact_ids": [
+        557,
+        556,
+        555,
+        554
+      ]
+    },
+    {
+      "entity_id": 84,
+      "fact_ids": [
+        692,
+        693
+      ]
+    },
+    {
+      "entity_id": 198,
+      "fact_ids": [
+        863,
+        864,
+        865
+      ]
+    }
+  ],
+  "people_sha256": "3131d00bc25dc9a4abf58b1d1585207b486f71fb855fb8b3d6d971a60538d644",
+  "general_ids": [],
+  "fact_sheet_sha256": "3a71d6261904923ec22830f283412be96a28e538fc82a5698789f8d09c855864",
+  "prompt_sha256": {
+    "gemma3": "f4247fac2471cbf1b5d38a253f1540d3bc16ae62e4f263a3b2e5ef52738e9a5d",
+    "gemma4": "b46f07c046657163ece403441070cdbf28318640ce03756e71cd28c28aeb4971"
+  }
+}

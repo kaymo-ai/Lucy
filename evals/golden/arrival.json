@@ -1,0 +1,55 @@
+{
+  "id": "arrival",
+  "question": "when should we arrive at the playa",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "arrive",
+    "playa"
+  ],
+  "camp_ids": [
+    598,
+    11742,
+    583,
+    596,
+    611
+  ],
+  "doc_ids": [
+    78,
+    173
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 53,
+      "fact_ids": [
+        642,
+        641,
+        639,
+        640
+      ]
+    },
+    {
+      "entity_id": 138,
+      "fact_ids": [
+        794,
+        795,
+        796,
+        797
+      ]
+    },
+    {
+      "entity_id": 6,
+      "fact_ids": [
+        507,
+        512,
+        510
+      ]
+    }
+  ],
+  "people_sha256": "6d5ddb9ef3e957f0fd56d37d8cdafbd7430f96e9b898fd0e5d25d7cb94c1b1de",
+  "general_ids": [],
+  "fact_sheet_sha256": "5370ac87bd17fa3f6ab63469ecdf303d813c3245d30804dad9f9f7709b60dc43",
+  "prompt_sha256": {
+    "gemma3": "c8ddb3d37511e2dab22f86523422c48008f5b84445fafbcdbf19b84c32855d26",
+    "gemma4": "d44f0beac7a2e718c50c8991017721b9a7a35b1ba5ab04286e28ec8c6b29ec6e"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "id": "decom-house",
+  "question": "where is the decom house",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "decom",
+    "house"
+  ],
+  "camp_ids": [
+    1055,
+    1233,
+    534
+  ],
+  "doc_ids": [
+    78,
+    173
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 90,
+      "fact_ids": [
+        707,
+        706,
+        705,
+        704
+      ]
+    },
+    {
+      "entity_id": 99,
+      "fact_ids": [
+        738,
+        739,
+        737,
+        736
+      ]
+    },
+    {
+      "entity_id": 92,
+      "fact_ids": [
+        710
+      ]
+    }
+  ],
+  "people_sha256": "994d8c290a1107f76daea636a65c8df2cb5a9f44f1e35983fb01f7dc0a161a28",
+  "general_ids": [],
+  "fact_sheet_sha256": "8bf03bbfa4d18d0228b3dba0e5d75cabd8b06ad56300dc2519fc246f0a852e5a",
+  "prompt_sha256": {
+    "gemma3": "8bdc8b74569ef7e1b279222584338e8dbb8b8299cad7886cdf9cddb99bd4d41e",
+    "gemma4": "17c44469087d548dd3fd7f5252aa51c2b2d2c6dabed7c6b7f73bf2dad76f00d2"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "lucy-access",
+  "question": "how do we get into Lucy at the storage place",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "into",
+    "lucy",
+    "storage",
+    "place"
+  ],
+  "camp_ids": [
+    575,
+    578,
+    676,
+    1182,
+    1279
+  ],
+  "doc_ids": [
+    78,
+    173
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 10,
+      "fact_ids": [
+        557,
+        556,
+        555,
+        554
+      ]
+    },
+    {
+      "entity_id": 84,
+      "fact_ids": [
+        692,
+        693
+      ]
+    },
+    {
+      "entity_id": 158,
+      "fact_ids": [
+        817,
+        815,
+        816,
+        814
+      ]
+    }
+  ],
+  "people_sha256": "3a7334b307717dbf97c23526cee8b77edd8450f4c185ccc563406c9d1259c585",
+  "general_ids": [],
+  "fact_sheet_sha256": "9e419b2efa1a4d837dd95764586c25b3232379e72704aa558dc8fbe1a14fadfa",
+  "prompt_sha256": {
+    "gemma3": "e17aa38e4a47358ed7b0aaacc6446aa08e8b47b96b7c7f8df01192578ec6aa03",
+    "gemma4": "666a6b6f134f05e2a49484eb76940eb40c11c24f645f7b4c8a81143b8c0eea6b"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "warehouse",
+  "question": "where is the warehouse",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "warehouse"
+  ],
+  "camp_ids": [],
+  "doc_ids": [],
+  "entity_hits": [
+    {
+      "entity_id": 57,
+      "fact_ids": [
+        646,
+        647
+      ]
+    },
+    {
+      "entity_id": 43,
+      "fact_ids": [
+        622
+      ]
+    }
+  ],
+  "people_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "general_ids": [],
+  "fact_sheet_sha256": "e141b598d84a3a9799db7dfc96123995dfb4f43143dbb3639757519ebd145065",
+  "prompt_sha256": {
+    "gemma3": "0c2d5185f1885f58d4fa77db108ffff61d475bf6b092ebc295fa459f78ccf471",
+    "gemma4": "9045b07e2223ad23f6629a6233159180d05893a3007d905a84e0fdfdd5bac613"
+  }
+}

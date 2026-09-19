@@ -1,0 +1,22 @@
+# TLS and nothing else.
+#
+# An earlier version did the site's codeword check here, with forward_auth and
+# a handle_response block. The block never fired -- browsers got a bare 401
+# with an empty body, the config adapted and reloaded without complaint, and
+# reading it explained nothing. The check now lives in the API, where it is
+# fifteen lines of Python covered by the test suite. Caddy terminates TLS,
+# which is the one job it is unambiguously good at.
+{$LUCY_HOSTNAME} {
+	encode gzip
+
+	handle /v1/* {
+		request_body {
+			max_size 30MB
+		}
+		reverse_proxy api:8000
+	}
+
+	handle {
+		reverse_proxy api:8000
+	}
+}

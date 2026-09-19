@@ -1,0 +1,54 @@
+{
+  "id": "power",
+  "question": "where does our power come from",
+  "db_sha256": "3dc9424d2ae29e5e8832b5722d6074e3d858e289c928665f636b216cdbcc24b9",
+  "terms": [
+    "power",
+    "come",
+    "from"
+  ],
+  "camp_ids": [
+    910,
+    1240,
+    643,
+    644,
+    645
+  ],
+  "doc_ids": [
+    78,
+    174
+  ],
+  "entity_hits": [
+    {
+      "entity_id": 90,
+      "fact_ids": [
+        703,
+        699,
+        700
+      ]
+    },
+    {
+      "entity_id": 124,
+      "fact_ids": [
+        758,
+        760,
+        759
+      ]
+    },
+    {
+      "entity_id": 43,
+      "fact_ids": [
+        618,
+        619,
+        621
+      ]
+    }
+  ],
+  "people_sha256": "10086f9970596ec67b58f7980221c737c5926e33d383f0933eb5440731af1084",
+  "general_ids": [],
+  "fact_sheet_sha256": "d0b6c84193e265413c136c98032d246109fc2c249fe2d11e34820833018249b6",
+  "prompt_sha256": {
+    "gemma3": "134a68602706c0708107d532a5796892b54e0da2c63fb7c021f90a278868cbda",
+    "gemma4": "768890c62ef91627272e0702678d31b07bb4ed1d171d1c71cb61785ac5efcaff"
+  }
+}
