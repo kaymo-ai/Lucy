@@ -181,6 +181,8 @@ copying the code and leaving out the camp:
 - **Screenshots that showed people.** The site's `/tech` images are blurred
   and remain; the unblurred ones do not.
 - **The camp secret.** `Sync.swift` carries a placeholder.
+- **Hand-written camp facts.** `manual_facts.json` and `manual_aliases.json`
+  ship with their documentation and no entries.
 - **Real names.** The pipeline tests, fixtures and design notes use
   examples drawn from the camp's records. Every surname in them has been
   replaced with a fictional one that keeps the original's initial, because

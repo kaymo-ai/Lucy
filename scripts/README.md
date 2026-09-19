@@ -32,7 +32,7 @@ installed. Everything else runs against in-memory SQLite.
 | `docx_to_markdown.py` | Converts a `.docx` build guide, figures and all, into the Markdown the Info tab renders. |
 | `playa_data.py` | Black Rock City's public event, camp and art listings into the JSON the Info tab reads. |
 | `bm_basics.py` | General Burning Man knowledge, written down rather than recalled, so the model has a small table of things about the desert that no camp row will ever say. |
-| `ingest_manual_facts.py` | Loads hand-written facts (`manual_facts.json`, not committed) into `camp_fact`, for what nobody ever typed into a chat. Runs before embedding so they get vectors like every other claim. |
+| `ingest_manual_facts.py` | Loads hand-written facts (`manual_facts.json`; shipped empty in the public copy) into `camp_fact`, for what nobody ever typed into a chat. Runs before embedding so they get vectors like every other claim. |
 | `dedupe_people.py` | Deletes non-people and what they wrote. **Must run before enrichment**: evidence cites messages by id. |
 | `build_people.py --install` | The roster, from the sign-up sheets. Without `--install` it writes a file nothing reads. |
 

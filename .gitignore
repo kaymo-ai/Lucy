@@ -54,10 +54,8 @@ ps_knowledge.db.bak
 # Generated databases and downloaded models
 scripts/output/
 scripts/models/
-SnailsNative/output/
 
 # RunAnywhere SDK (large binary package - clone separately)
-SnailsNative/runanywhere-sdks/
 
 # Swift Package Manager
 .build/

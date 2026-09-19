@@ -6,17 +6,14 @@ set -euo pipefail
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DERIVED="${DIR}/.build-device"
 
-read -r DEVICE UDID <<<"$("${DIR}/../../SnailsNative/spike/run-spike.sh" ids 2>/dev/null || true)"
-if [ -z "${UDID:-}" ]; then
-    tmp="$(mktemp -t dc)"
-    xcrun devicectl list devices --json-output "${tmp}" >/dev/null 2>&1
-    read -r DEVICE UDID <<<"$(python3 -c "
+tmp="$(mktemp -t dc)"
+xcrun devicectl list devices --json-output "${tmp}" >/dev/null 2>&1
+read -r DEVICE UDID <<<"$(python3 -c "
 import json,sys
 for d in json.load(open('${tmp}'))['result']['devices']:
     if d['connectionProperties']['pairingState']=='paired':
         print(d['identifier'], d['hardwareProperties']['udid']); break
 ")"
-fi
 [ -n "${UDID:-}" ] || { echo "no paired device" >&2; exit 1; }
 
 (cd "${DIR}" && xcodegen generate >/dev/null)

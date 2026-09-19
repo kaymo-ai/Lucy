@@ -264,7 +264,7 @@ def absorb_orphan_spellings(cursor) -> int:
         "Saami Khoury", "CeCe" inside "Cece Garland")
       · or the whole normalised name is within one edit for names long
         enough that one edit cannot change who is meant ("cecegarlan" ->
-        "cecegehring")
+        "cecegarland")
 
     An orphan matching more than one person is skipped entirely: guessing
     which "David" was meant is worse than not linking.

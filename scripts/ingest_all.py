@@ -16,7 +16,6 @@ from pathlib import Path
 
 from parse_chats import ChatParser, write_database
 from parse_docs import run as parse_docs_run
-from ingest_additional_context import run as ingest_additional_context_run
 
 MESSAGE_LINE = re.compile(r'^[‎‏]*\[\d{1,2}/\d{1,2}/\d{2,4},')
 
@@ -167,21 +166,22 @@ def main():
     print(f"\nWrote {db_path}")
 
     # Stage 2: camp documentation → camp_knowledge, roster, shifts
-    # Stage 3: Burning Man context → additional camp_knowledge rows
     #
-    # These MUST run after the chat ingest above, because write_database()
+    # This MUST run after the chat ingest above, because write_database()
     # (via create_database()) recreates the file from scratch and would
-    # otherwise destroy their tables. Encoding the order here rather than in
+    # otherwise destroy its tables. Encoding the order here rather than in
     # the README is deliberate: an earlier version of this pipeline
     # documented the order in prose and silently shipped a database missing
-    # 601 knowledge rows, 790 roster rows and 2,087 shift rows. Both stages
-    # are imported and called directly (not subprocess) so a failure raises
+    # 601 knowledge rows, 790 roster rows and 2,087 shift rows. It is
+    # imported and called directly (not subprocess) so a failure raises
     # instead of being swallowed by an ignored exit code.
-    print("\nStage 2/3: parsing camp documents into camp_knowledge/roster/shifts...")
+    #
+    # A stage 3 used to follow: six Markdown files of pasted LLM output about
+    # Burning Man in general, from the January design. Removed 2026-09-19;
+    # general knowledge is the model's own now (see the invariant in CLAUDE.md)
+    # and hand-written camp facts go in manual_facts.json.
+    print("\nStage 2/2: parsing camp documents into camp_knowledge/roster/shifts...")
     parse_docs_run(db_path=db_path)
-
-    print("\nStage 3/3: ingesting additional Burning Man context...")
-    ingest_additional_context_run(db_path=db_path)
 
     check_expected_tables(db_path)
     print(f"\nCorpus build complete: {db_path}")
