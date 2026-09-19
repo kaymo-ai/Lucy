@@ -7,6 +7,9 @@ documents, on an iPhone, in a place with no signal. There is also a small
 camp server: when someone presses Sync, notes taken on the playa go up and
 everyone else's come down.
 
+There is a write-up with screenshots of the app in use at
+[lucy.marcusfoster.com/tech](https://lucy.marcusfoster.com/tech).
+
 This repository is the code. **The camp's data is not here**, and neither
 is anything derived from it. The app builds, but it knows nothing until you
 run the pipeline over a corpus of your own. See
